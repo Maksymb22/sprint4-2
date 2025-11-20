@@ -12,11 +12,11 @@ import { NavLink } from "./NavLink";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Executive Dashboard", href: "/" },
-  { icon: Search, label: "Search & SEO", href: "/seo" },
+  { icon: Search, label: "Search & SEO", href: "/search-seo" },
   { icon: Share2, label: "Organic Social", href: "/organic-social" },
   { icon: DollarSign, label: "Paid Social", href: "/paid-social" },
   { icon: ShoppingCart, label: "E-Commerce", href: "/ecommerce" },
-  { icon: Target, label: "Conversion", href: "/conversion" },
+  { icon: Target, label: "Conversions", href: "/conversions" },
   { icon: TrendingUp, label: "Competitive Intelligence", href: "/competitive" },
   { icon: FileText, label: "Financial & Operations", href: "/financial" },
 ];
