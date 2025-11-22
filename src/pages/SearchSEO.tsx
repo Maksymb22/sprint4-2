@@ -3,8 +3,9 @@ import { MetricCard } from "@/components/MetricCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Search, TrendingUp, Eye, Target, ArrowUp, ArrowDown, Minus } from "lucide-react";
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { useState } from "react";
+import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
 
 const keywordData = [
   { month: "Jan", rankings: 45, traffic: 1200, visibility: 65 },
@@ -30,6 +31,8 @@ const keywordsDatabase = [
 
 const SearchSEO = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [trendsChartType, setTrendsChartType] = useState<ChartType>("line");
+  const [trafficChartType, setTrafficChartType] = useState<ChartType>("bar");
 
   const filteredKeywords = keywordsDatabase.filter(keyword =>
     keyword.keyword.toLowerCase().includes(searchQuery.toLowerCase())
@@ -82,49 +85,115 @@ const SearchSEO = () => {
 
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>SEO Performance Trends</CardTitle>
+              <ChartTypeSelector currentType={trendsChartType} onTypeChange={setTrendsChartType} />
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={keywordData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
-                  <YAxis stroke="hsl(var(--muted-foreground))" />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '8px'
-                    }}
-                  />
-                  <Legend />
-                  <Line type="monotone" dataKey="rankings" stroke="hsl(var(--chart-1))" strokeWidth={2} name="Rankings" />
-                  <Line type="monotone" dataKey="visibility" stroke="hsl(var(--chart-2))" strokeWidth={2} name="Visibility %" />
-                </LineChart>
+                {trendsChartType === "line" ? (
+                  <LineChart data={keywordData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
+                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Legend />
+                    <Line type="monotone" dataKey="rankings" stroke="hsl(var(--chart-1))" strokeWidth={2} name="Rankings" />
+                    <Line type="monotone" dataKey="visibility" stroke="hsl(var(--chart-2))" strokeWidth={2} name="Visibility %" />
+                  </LineChart>
+                ) : trendsChartType === "bar" ? (
+                  <BarChart data={keywordData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
+                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Legend />
+                    <Bar dataKey="rankings" fill="hsl(var(--chart-1))" name="Rankings" />
+                    <Bar dataKey="visibility" fill="hsl(var(--chart-2))" name="Visibility %" />
+                  </BarChart>
+                ) : (
+                  <AreaChart data={keywordData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
+                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Legend />
+                    <Area type="monotone" dataKey="rankings" stroke="hsl(var(--chart-1))" fill="hsl(var(--chart-1))" fillOpacity={0.3} name="Rankings" />
+                    <Area type="monotone" dataKey="visibility" stroke="hsl(var(--chart-2))" fill="hsl(var(--chart-2))" fillOpacity={0.3} name="Visibility %" />
+                  </AreaChart>
+                )}
               </ResponsiveContainer>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Monthly Traffic Growth</CardTitle>
+              <ChartTypeSelector currentType={trafficChartType} onTypeChange={setTrafficChartType} />
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={keywordData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
-                  <YAxis stroke="hsl(var(--muted-foreground))" />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '8px'
-                    }}
-                  />
-                  <Bar dataKey="traffic" fill="hsl(var(--chart-3))" name="Organic Traffic" />
-                </BarChart>
+                {trafficChartType === "bar" ? (
+                  <BarChart data={keywordData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
+                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Bar dataKey="traffic" fill="hsl(var(--chart-3))" name="Organic Traffic" />
+                  </BarChart>
+                ) : trafficChartType === "line" ? (
+                  <LineChart data={keywordData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
+                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Line type="monotone" dataKey="traffic" stroke="hsl(var(--chart-3))" strokeWidth={2} name="Organic Traffic" />
+                  </LineChart>
+                ) : (
+                  <AreaChart data={keywordData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
+                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Area type="monotone" dataKey="traffic" stroke="hsl(var(--chart-3))" fill="hsl(var(--chart-3))" fillOpacity={0.3} name="Organic Traffic" />
+                  </AreaChart>
+                )}
               </ResponsiveContainer>
             </CardContent>
           </Card>
