@@ -1,8 +1,10 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search, TrendingUp, Eye, Target } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Search, TrendingUp, Eye, Target, ArrowUp, ArrowDown, Minus } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { useState } from "react";
 
 const keywordData = [
   { month: "Jan", rankings: 45, traffic: 1200, visibility: 65 },
@@ -13,7 +15,32 @@ const keywordData = [
   { month: "Jun", rankings: 78, traffic: 2680, visibility: 85 },
 ];
 
+const keywordsDatabase = [
+  { keyword: "digital marketing services", position: 3, searchVolume: 8100, trend: "up", change: 2 },
+  { keyword: "social media management", position: 5, searchVolume: 6500, trend: "up", change: 1 },
+  { keyword: "content marketing strategy", position: 7, searchVolume: 5200, trend: "stable", change: 0 },
+  { keyword: "SEO optimization", position: 2, searchVolume: 12400, trend: "up", change: 3 },
+  { keyword: "email marketing automation", position: 8, searchVolume: 4800, trend: "down", change: -1 },
+  { keyword: "PPC advertising", position: 4, searchVolume: 7300, trend: "up", change: 2 },
+  { keyword: "brand awareness campaign", position: 12, searchVolume: 3900, trend: "stable", change: 0 },
+  { keyword: "conversion rate optimization", position: 6, searchVolume: 5800, trend: "up", change: 1 },
+  { keyword: "marketing analytics", position: 9, searchVolume: 4200, trend: "down", change: -2 },
+  { keyword: "influencer marketing", position: 11, searchVolume: 3600, trend: "stable", change: 0 },
+];
+
 const SearchSEO = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredKeywords = keywordsDatabase.filter(keyword =>
+    keyword.keyword.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const getTrendIcon = (trend: string) => {
+    if (trend === "up") return <ArrowUp className="h-4 w-4 text-success" />;
+    if (trend === "down") return <ArrowDown className="h-4 w-4 text-destructive" />;
+    return <Minus className="h-4 w-4 text-muted-foreground" />;
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -102,6 +129,73 @@ const SearchSEO = () => {
             </CardContent>
           </Card>
         </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Keyword Rankings</CardTitle>
+            <div className="relative mt-4">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search keywords..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Keyword</th>
+                    <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Position</th>
+                    <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Search Volume</th>
+                    <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Trend</th>
+                    <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Change</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredKeywords.length > 0 ? (
+                    filteredKeywords.map((item, index) => (
+                      <tr key={index} className="border-b border-border/50 hover:bg-accent/50 transition-colors">
+                        <td className="py-3 px-4 text-sm text-foreground">{item.keyword}</td>
+                        <td className="text-center py-3 px-4">
+                          <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-semibold text-sm">
+                            {item.position}
+                          </span>
+                        </td>
+                        <td className="text-center py-3 px-4 text-sm text-muted-foreground">
+                          {item.searchVolume.toLocaleString()}
+                        </td>
+                        <td className="text-center py-3 px-4">
+                          <div className="flex justify-center">
+                            {getTrendIcon(item.trend)}
+                          </div>
+                        </td>
+                        <td className="text-center py-3 px-4">
+                          <span className={`text-sm font-medium ${
+                            item.change > 0 ? 'text-success' : 
+                            item.change < 0 ? 'text-destructive' : 
+                            'text-muted-foreground'
+                          }`}>
+                            {item.change > 0 ? '+' : ''}{item.change}
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={5} className="text-center py-8 text-muted-foreground">
+                        No keywords found matching "{searchQuery}"
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </DashboardLayout>
   );
