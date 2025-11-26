@@ -72,10 +72,10 @@ const Conversions = () => {
           <CardContent>
             <ResponsiveContainer width="100%" height={400}>
               {funnelChartType === "bar" ? (
-                <BarChart data={funnelData} layout="vertical">
+                <BarChart data={funnelData} layout="vertical" margin={{ left: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis type="number" stroke="hsl(var(--muted-foreground))" />
-                  <YAxis dataKey="stage" type="category" stroke="hsl(var(--muted-foreground))" />
+                  <YAxis dataKey="stage" type="category" stroke="hsl(var(--muted-foreground))" width={100} />
                   <Tooltip 
                     contentStyle={{ 
                       backgroundColor: 'hsl(var(--card))',
