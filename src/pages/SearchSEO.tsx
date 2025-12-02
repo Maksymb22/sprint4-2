@@ -1,6 +1,7 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
 import { AISuggestions } from "@/components/AISuggestions";
+import { ExportData } from "@/components/ExportData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Search, TrendingUp, Eye, Target, ArrowUp, ArrowDown, Minus } from "lucide-react";
@@ -68,9 +69,12 @@ const SearchSEO = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Search & SEO Performance</h1>
-          <p className="text-muted-foreground mt-1">Track keyword rankings, visibility metrics, and organic traffic</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Search & SEO Performance</h1>
+            <p className="text-muted-foreground mt-1">Track keyword rankings, visibility metrics, and organic traffic</p>
+          </div>
+          <ExportData data={keywordData} filename="search-seo-data" />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
