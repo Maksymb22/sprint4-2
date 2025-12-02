@@ -16,6 +16,7 @@ import SEOOrganicTrafficHistory from "./pages/SEOOrganicTrafficHistory";
 import SEOVisibilityHistory from "./pages/SEOVisibilityHistory";
 import SEOCTRHistory from "./pages/SEOCTRHistory";
 import Settings from "./pages/Settings";
+import Activity from "./pages/Activity";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/competitive" element={<Competitive />} />
           <Route path="/financial" element={<Financial />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/activity" element={<Activity />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

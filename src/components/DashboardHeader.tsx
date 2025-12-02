@@ -32,7 +32,7 @@ export const DashboardHeader = () => {
   };
 
   const handleViewAllActivity = () => {
-    navigate('/settings?tab=notifications');
+    navigate('/activity');
   };
 
   const handleLogout = () => {
