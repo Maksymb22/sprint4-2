@@ -1,5 +1,7 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
+import { AISuggestions } from "@/components/AISuggestions";
+import { ExportData } from "@/components/ExportData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, Target, TrendingUp, Users } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
@@ -19,12 +21,33 @@ const PaidSocial = () => {
   const [performanceChartType, setPerformanceChartType] = useState<ChartType>("line");
   const [spendChartType, setSpendChartType] = useState<ChartType>("line");
 
+  const aiSuggestions = [
+    {
+      type: "opportunity" as const,
+      title: "Increasing ROAS Trend",
+      description: "ROAS improved from 3.2x to 4.7x over 6 months. This upward trend indicates campaign optimization is working. Consider scaling successful campaigns.",
+    },
+    {
+      type: "insight" as const,
+      title: "Efficient Cost Per Conversion",
+      description: "Cost per conversion decreased by 12.4% despite increased spend. Your targeting and creative optimization strategies are effectively reducing acquisition costs.",
+    },
+    {
+      type: "warning" as const,
+      title: "Ad Spend Decline",
+      description: "Ad spend decreased by 8.3%. While efficiency is up, reduced spend may limit growth potential. Consider reinvesting savings into high-performing campaigns.",
+    },
+  ];
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Paid Social Media</h1>
-          <p className="text-muted-foreground mt-1">Track ROI, ad spend, and campaign performance</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Paid Social Media</h1>
+            <p className="text-muted-foreground mt-1">Track ROI, ad spend, and campaign performance</p>
+          </div>
+          <ExportData data={campaignData} filename="paid-social-data" />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -57,6 +80,8 @@ const PaidSocial = () => {
             subtitle="Average CPC"
           />
         </div>
+
+        <AISuggestions suggestions={aiSuggestions} title="AI Paid Media Insights" />
 
         <div className="grid gap-4 md:grid-cols-2">
           <Card>

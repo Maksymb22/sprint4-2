@@ -5,6 +5,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import {
   Popover,
@@ -13,8 +14,11 @@ import {
 } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const DashboardHeader = () => {
+  const navigate = useNavigate();
+
   const dailySummary = [
     { metric: "Revenue", change: "+2.3%", trend: "up", value: "$12,450" },
     { metric: "Active Users", change: "+5.1%", trend: "up", value: "847" },
@@ -22,6 +26,20 @@ export const DashboardHeader = () => {
     { metric: "Organic Traffic", change: "+8.4%", trend: "up", value: "2,847" },
     { metric: "Ad Spend", change: "-1.2%", trend: "down", value: "$1,523" },
   ];
+
+  const handleProfileClick = () => {
+    navigate('/settings?tab=profile');
+  };
+
+  const handleSettingsClick = () => {
+    navigate('/settings');
+  };
+
+  const handleLogout = () => {
+    // In a real app, this would handle authentication logout
+    console.log('Logout clicked');
+    // Could redirect to login page or show confirmation
+  };
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
@@ -88,10 +106,27 @@ export const DashboardHeader = () => {
                 <User className="h-5 w-5" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuContent align="end" className="w-56">
+              <div className="flex items-center gap-2 px-2 py-1.5">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
+                  <User className="h-4 w-4 text-primary" />
+                </div>
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium">John Doe</p>
+                  <p className="text-xs text-muted-foreground">john.doe@example.com</p>
+                </div>
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleProfileClick}>
+                Profile Settings
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleSettingsClick}>
+                Settings
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+                Logout
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

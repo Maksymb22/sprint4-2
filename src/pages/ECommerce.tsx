@@ -1,5 +1,7 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
+import { AISuggestions } from "@/components/AISuggestions";
+import { ExportData } from "@/components/ExportData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShoppingCart, DollarSign, Package, TrendingUp } from "lucide-react";
 import { AreaChart, Area, BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
@@ -19,12 +21,33 @@ const ECommerce = () => {
   const [revenueChartType, setRevenueChartType] = useState<ChartType>("area");
   const [ordersChartType, setOrdersChartType] = useState<ChartType>("bar");
 
+  const aiSuggestions = [
+    {
+      type: "opportunity" as const,
+      title: "Strong Revenue Growth",
+      description: "Revenue grew 82.5% from $45.2K to $82.5K in 6 months. Continue this momentum by expanding successful product lines and marketing channels.",
+    },
+    {
+      type: "insight" as const,
+      title: "Stable Average Order Value",
+      description: "AOV remains consistent around $144-146, indicating stable customer purchasing behavior. This predictability helps with inventory and cash flow planning.",
+    },
+    {
+      type: "warning" as const,
+      title: "Conversion Rate Below Potential",
+      description: "3.8% conversion rate has room for improvement. Focus on checkout optimization, product page enhancements, and retargeting campaigns.",
+    },
+  ];
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">E-Commerce Performance</h1>
-          <p className="text-muted-foreground mt-1">Sales metrics, product analytics, and customer journey tracking</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">E-Commerce Performance</h1>
+            <p className="text-muted-foreground mt-1">Sales metrics, product analytics, and customer journey tracking</p>
+          </div>
+          <ExportData data={salesData} filename="ecommerce-data" />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -57,6 +80,8 @@ const ECommerce = () => {
             subtitle="Visitor to customer"
           />
         </div>
+
+        <AISuggestions suggestions={aiSuggestions} title="AI E-Commerce Insights" />
 
         <div className="grid gap-4 md:grid-cols-2">
           <Card>

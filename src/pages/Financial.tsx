@@ -1,5 +1,7 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
+import { AISuggestions } from "@/components/AISuggestions";
+import { ExportData } from "@/components/ExportData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, TrendingUp, PieChart, Activity } from "lucide-react";
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
@@ -19,12 +21,33 @@ const Financial = () => {
   const [revenueChartType, setRevenueChartType] = useState<ChartType>("line");
   const [profitChartType, setProfitChartType] = useState<ChartType>("area");
 
+  const aiSuggestions = [
+    {
+      type: "opportunity" as const,
+      title: "Strong Profit Growth",
+      description: "Net profit grew 76% from $58K to $102K in 6 months while maintaining healthy 41% margins. This trajectory suggests sustainable growth - consider reinvesting in expansion.",
+    },
+    {
+      type: "insight" as const,
+      title: "Excellent Operating Efficiency",
+      description: "92% operating efficiency score with improving margins indicates strong operational management. Document best practices to maintain this as you scale.",
+    },
+    {
+      type: "warning" as const,
+      title: "Expense Growth Monitoring",
+      description: "Expenses grew 35% ($98K to $132K) while revenue grew 50%. Monitor expense ratios carefully to ensure profitability remains strong during growth phase.",
+    },
+  ];
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Financial & Operational</h1>
-          <p className="text-muted-foreground mt-1">Revenue tracking, profitability analysis, and operational efficiency</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Financial & Operational</h1>
+            <p className="text-muted-foreground mt-1">Revenue tracking, profitability analysis, and operational efficiency</p>
+          </div>
+          <ExportData data={financialData} filename="financial-data" />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -57,6 +80,8 @@ const Financial = () => {
             subtitle="Efficiency score"
           />
         </div>
+
+        <AISuggestions suggestions={aiSuggestions} title="AI Financial Insights" />
 
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
