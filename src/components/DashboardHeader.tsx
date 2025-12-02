@@ -31,8 +31,8 @@ export const DashboardHeader = () => {
     navigate('/settings?tab=profile');
   };
 
-  const handleSettingsClick = () => {
-    navigate('/settings');
+  const handleViewAllActivity = () => {
+    navigate('/settings?tab=notifications');
   };
 
   const handleLogout = () => {
@@ -92,7 +92,7 @@ export const DashboardHeader = () => {
                   ))}
                 </div>
                 <div className="border-t border-border pt-2">
-                  <Button variant="ghost" className="w-full text-xs">
+                  <Button variant="ghost" className="w-full text-xs" onClick={handleViewAllActivity}>
                     View All Activity
                   </Button>
                 </div>
@@ -119,9 +119,6 @@ export const DashboardHeader = () => {
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleProfileClick}>
                 Profile Settings
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleSettingsClick}>
-                Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout} className="text-destructive">
