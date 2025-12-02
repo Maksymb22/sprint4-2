@@ -1,11 +1,13 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
+import { AISuggestions } from "@/components/AISuggestions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Search, TrendingUp, Eye, Target, ArrowUp, ArrowDown, Minus } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { useState } from "react";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
+import { useNavigate } from "react-router-dom";
 
 const keywordData = [
   { month: "Jan", rankings: 45, traffic: 1200, visibility: 65 },
@@ -30,9 +32,28 @@ const keywordsDatabase = [
 ];
 
 const SearchSEO = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [trendsChartType, setTrendsChartType] = useState<ChartType>("line");
   const [trafficChartType, setTrafficChartType] = useState<ChartType>("bar");
+
+  const aiSuggestions = [
+    {
+      type: "opportunity" as const,
+      title: "High-Performing Keywords",
+      description: "SEO optimization ranks #2 with 12.4K search volume. Consider creating more content around this topic to capture additional market share.",
+    },
+    {
+      type: "insight" as const,
+      title: "Traffic Growth Momentum",
+      description: "Organic traffic is up 22.5% month-over-month. This upward trend suggests your content strategy is resonating with your target audience.",
+    },
+    {
+      type: "warning" as const,
+      title: "Keyword Position Decline",
+      description: "Marketing analytics dropped 2 positions. Review content freshness and backlink profile to prevent further ranking loss.",
+    },
+  ];
 
   const filteredKeywords = keywordsDatabase.filter(keyword =>
     keyword.keyword.toLowerCase().includes(searchQuery.toLowerCase())
@@ -53,35 +74,46 @@ const SearchSEO = () => {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <MetricCard
-            title="Keyword Rankings"
-            value="78"
-            change={15.3}
-            icon={<Search className="h-4 w-4" />}
-            subtitle="Top 10 positions"
-          />
-          <MetricCard
-            title="Organic Traffic"
-            value="2,680"
-            change={22.5}
-            icon={<TrendingUp className="h-4 w-4" />}
-            subtitle="Monthly visitors"
-          />
-          <MetricCard
-            title="Search Visibility"
-            value="85%"
-            change={8.2}
-            icon={<Eye className="h-4 w-4" />}
-            subtitle="Domain visibility"
-          />
-          <MetricCard
-            title="Click-Through Rate"
-            value="4.2%"
-            change={12.1}
-            icon={<Target className="h-4 w-4" />}
-            subtitle="Average CTR"
-          />
+          <div className="cursor-pointer" onClick={() => navigate('/search-seo/keyword-rankings-history')}>
+            <MetricCard
+              title="Keyword Rankings"
+              value="78"
+              change={15.3}
+              icon={<Search className="h-4 w-4" />}
+              subtitle="Top 10 positions"
+            />
+          </div>
+          <div className="cursor-pointer" onClick={() => navigate('/search-seo/organic-traffic-history')}>
+            <MetricCard
+              title="Organic Traffic"
+              value="2,680"
+              change={22.5}
+              icon={<TrendingUp className="h-4 w-4" />}
+              subtitle="Monthly visitors"
+            />
+          </div>
+          <div className="cursor-pointer" onClick={() => navigate('/search-seo/visibility-history')}>
+            <MetricCard
+              title="Search Visibility"
+              value="85%"
+              change={8.2}
+              icon={<Eye className="h-4 w-4" />}
+              subtitle="Domain visibility"
+            />
+          </div>
+          <div className="cursor-pointer" onClick={() => navigate('/search-seo/ctr-history')}>
+            <MetricCard
+              title="Click-Through Rate"
+              value="4.2%"
+              change={12.1}
+              icon={<Target className="h-4 w-4" />}
+              subtitle="Average CTR"
+            />
+          </div>
         </div>
+
+        {/* AI Strategic Insights */}
+        <AISuggestions suggestions={aiSuggestions} title="AI SEO Insights" />
 
         <div className="grid gap-4 md:grid-cols-2">
           <Card>

@@ -65,7 +65,7 @@ export const PerformanceChart = () => {
   };
 
   return (
-    <Card className="col-span-full lg:col-span-2">
+    <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <CardTitle>Platform Performance Comparison</CardTitle>
         <ChartTypeSelector currentType={chartType} onTypeChange={setChartType} />

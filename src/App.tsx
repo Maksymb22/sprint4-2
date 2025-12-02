@@ -11,6 +11,11 @@ import ECommerce from "./pages/ECommerce";
 import Conversions from "./pages/Conversions";
 import Competitive from "./pages/Competitive";
 import Financial from "./pages/Financial";
+import SEOKeywordRankingsHistory from "./pages/SEOKeywordRankingsHistory";
+import SEOOrganicTrafficHistory from "./pages/SEOOrganicTrafficHistory";
+import SEOVisibilityHistory from "./pages/SEOVisibilityHistory";
+import SEOCTRHistory from "./pages/SEOCTRHistory";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,12 +29,17 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/search-seo" element={<SearchSEO />} />
+          <Route path="/search-seo/keyword-rankings-history" element={<SEOKeywordRankingsHistory />} />
+          <Route path="/search-seo/organic-traffic-history" element={<SEOOrganicTrafficHistory />} />
+          <Route path="/search-seo/visibility-history" element={<SEOVisibilityHistory />} />
+          <Route path="/search-seo/ctr-history" element={<SEOCTRHistory />} />
           <Route path="/organic-social" element={<OrganicSocial />} />
           <Route path="/paid-social" element={<PaidSocial />} />
           <Route path="/ecommerce" element={<ECommerce />} />
           <Route path="/conversions" element={<Conversions />} />
           <Route path="/competitive" element={<Competitive />} />
           <Route path="/financial" element={<Financial />} />
+          <Route path="/settings" element={<Settings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

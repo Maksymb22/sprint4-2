@@ -1,12 +1,13 @@
-import { 
-  LayoutDashboard, 
-  Search, 
-  Share2, 
-  DollarSign, 
-  ShoppingCart, 
-  Target, 
-  TrendingUp, 
-  FileText 
+import {
+  LayoutDashboard,
+  Search,
+  Share2,
+  DollarSign,
+  ShoppingCart,
+  Target,
+  TrendingUp,
+  FileText,
+  Settings
 } from "lucide-react";
 import { NavLink } from "./NavLink";
 
@@ -44,6 +45,14 @@ export const DashboardNav = () => {
       </nav>
 
       <div className="p-4 border-t border-sidebar-border">
+        <NavLink
+          to="/settings"
+          className="flex items-center gap-3 px-3 py-2 rounded-lg text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors mb-2"
+          activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+        >
+          <Settings className="h-5 w-5" />
+          <span className="text-sm">Settings</span>
+        </NavLink>
         <div className="px-3 py-2 text-xs text-sidebar-foreground/60">
           <p>Data updated 5 min ago</p>
         </div>
