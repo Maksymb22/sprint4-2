@@ -3,6 +3,7 @@ import { MetricCard } from "@/components/MetricCard";
 import { RevenueChart } from "@/components/RevenueChart";
 import { PerformanceChart } from "@/components/PerformanceChart";
 import { AISuggestions } from "@/components/AISuggestions";
+import { ExportData } from "@/components/ExportData";
 import { DollarSign, Users, TrendingUp, Activity } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -25,15 +26,25 @@ const Index = () => {
     },
   ];
 
+  const executiveData = [
+    { metric: "Total Revenue", value: "$346,820", change: "12.3%" },
+    { metric: "Active Users", value: "12,847", change: "8.1%" },
+    { metric: "Conversion Rate", value: "3.24%", change: "-2.4%" },
+    { metric: "Engagement Score", value: "87.5", change: "5.2%" },
+  ];
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
         {/* Page Title */}
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Executive Dashboard</h1>
-          <p className="text-muted-foreground mt-1">
-            Comprehensive overview of your business performance and key metrics
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Executive Dashboard</h1>
+            <p className="text-muted-foreground mt-1">
+              Comprehensive overview of your business performance and key metrics
+            </p>
+          </div>
+          <ExportData data={executiveData} filename="executive-dashboard-data" />
         </div>
 
         {/* Key Metrics Grid */}

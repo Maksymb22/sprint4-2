@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis, LineChart, Line, AreaChart, Area } from "recharts";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
 import { useState } from "react";
@@ -13,22 +13,44 @@ const data = [
 export const PerformanceChart = () => {
   const [chartType, setChartType] = useState<ChartType>("bar");
 
+  const formatNumber = (value: number) => {
+    if (value >= 1000) {
+      return `${(value / 1000).toFixed(1)}k`;
+    }
+    return value.toString();
+  };
+
   const renderChart = () => {
     const commonProps = {
       data,
       children: [
         <CartesianGrid key="grid" strokeDasharray="3 3" stroke="hsl(var(--border))" />,
-        <XAxis key="xaxis" dataKey="name" stroke="hsl(var(--muted-foreground))" />,
-        <YAxis key="yaxis" stroke="hsl(var(--muted-foreground))" />,
+        <XAxis
+          key="xaxis"
+          dataKey="name"
+          stroke="hsl(var(--muted-foreground))"
+          style={{ fontSize: '12px' }}
+        />,
+        <YAxis
+          key="yaxis"
+          stroke="hsl(var(--muted-foreground))"
+          tickFormatter={formatNumber}
+          style={{ fontSize: '12px' }}
+        />,
         <Tooltip
           key="tooltip"
+          formatter={(value: number) => value.toLocaleString()}
           contentStyle={{
             backgroundColor: "hsl(var(--card))",
             border: "1px solid hsl(var(--border))",
             borderRadius: "var(--radius)",
           }}
         />,
-        <Legend key="legend" />
+        <Legend
+          key="legend"
+          wrapperStyle={{ fontSize: '12px' }}
+          iconType="circle"
+        />
       ]
     };
 
@@ -36,9 +58,24 @@ export const PerformanceChart = () => {
       return (
         <BarChart {...commonProps}>
           {commonProps.children}
-          <Bar dataKey="impressions" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="engagement" fill="hsl(var(--chart-2))" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="conversions" fill="hsl(var(--chart-3))" radius={[4, 4, 0, 0]} />
+          <Bar
+            dataKey="impressions"
+            fill="hsl(var(--chart-1))"
+            radius={[4, 4, 0, 0]}
+            name="Impressions"
+          />
+          <Bar
+            dataKey="engagement"
+            fill="hsl(var(--chart-2))"
+            radius={[4, 4, 0, 0]}
+            name="Engagement"
+          />
+          <Bar
+            dataKey="conversions"
+            fill="hsl(var(--chart-3))"
+            radius={[4, 4, 0, 0]}
+            name="Conversions"
+          />
         </BarChart>
       );
     }
@@ -47,9 +84,30 @@ export const PerformanceChart = () => {
       return (
         <LineChart {...commonProps}>
           {commonProps.children}
-          <Line type="monotone" dataKey="impressions" stroke="hsl(var(--chart-1))" strokeWidth={2} />
-          <Line type="monotone" dataKey="engagement" stroke="hsl(var(--chart-2))" strokeWidth={2} />
-          <Line type="monotone" dataKey="conversions" stroke="hsl(var(--chart-3))" strokeWidth={2} />
+          <Line
+            type="monotone"
+            dataKey="impressions"
+            stroke="hsl(var(--chart-1))"
+            strokeWidth={3}
+            name="Impressions"
+            dot={{ r: 4 }}
+          />
+          <Line
+            type="monotone"
+            dataKey="engagement"
+            stroke="hsl(var(--chart-2))"
+            strokeWidth={3}
+            name="Engagement"
+            dot={{ r: 4 }}
+          />
+          <Line
+            type="monotone"
+            dataKey="conversions"
+            stroke="hsl(var(--chart-3))"
+            strokeWidth={3}
+            name="Conversions"
+            dot={{ r: 4 }}
+          />
         </LineChart>
       );
     }
@@ -57,9 +115,30 @@ export const PerformanceChart = () => {
     return (
       <AreaChart {...commonProps}>
         {commonProps.children}
-        <Area type="monotone" dataKey="impressions" stroke="hsl(var(--chart-1))" fill="hsl(var(--chart-1))" fillOpacity={0.3} />
-        <Area type="monotone" dataKey="engagement" stroke="hsl(var(--chart-2))" fill="hsl(var(--chart-2))" fillOpacity={0.3} />
-        <Area type="monotone" dataKey="conversions" stroke="hsl(var(--chart-3))" fill="hsl(var(--chart-3))" fillOpacity={0.3} />
+        <Area
+          type="monotone"
+          dataKey="impressions"
+          stroke="hsl(var(--chart-1))"
+          fill="hsl(var(--chart-1))"
+          fillOpacity={0.3}
+          name="Impressions"
+        />
+        <Area
+          type="monotone"
+          dataKey="engagement"
+          stroke="hsl(var(--chart-2))"
+          fill="hsl(var(--chart-2))"
+          fillOpacity={0.3}
+          name="Engagement"
+        />
+        <Area
+          type="monotone"
+          dataKey="conversions"
+          stroke="hsl(var(--chart-3))"
+          fill="hsl(var(--chart-3))"
+          fillOpacity={0.3}
+          name="Conversions"
+        />
       </AreaChart>
     );
   };
@@ -67,11 +146,14 @@ export const PerformanceChart = () => {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-        <CardTitle>Platform Performance Comparison</CardTitle>
+        <div className="space-y-1">
+          <CardTitle>Platform Performance Comparison</CardTitle>
+          <CardDescription>Comparing impressions, engagement, and conversions across platforms</CardDescription>
+        </div>
         <ChartTypeSelector currentType={chartType} onTypeChange={setChartType} />
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={320}>
           {renderChart()}
         </ResponsiveContainer>
       </CardContent>

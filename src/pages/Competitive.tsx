@@ -1,5 +1,7 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
+import { AISuggestions } from "@/components/AISuggestions";
+import { ExportData } from "@/components/ExportData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Award, TrendingUp, Target, BarChart3 } from "lucide-react";
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Legend, BarChart as ReBarChart, Bar, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
@@ -24,12 +26,33 @@ const marketPositionData = [
 const Competitive = () => {
   const [shareChartType, setShareChartType] = useState<ChartType>("bar");
 
+  const aiSuggestions = [
+    {
+      type: "opportunity" as const,
+      title: "Customer Satisfaction Lead",
+      description: "Your customer satisfaction score of 85 significantly outperforms competitors (78 and 72). Leverage this in marketing and use NPS testimonials to drive acquisition.",
+    },
+    {
+      type: "insight" as const,
+      title: "Digital Presence Gap",
+      description: "Competitor A leads in digital presence (82 vs your 76). Invest in SEO, content marketing, and social media to close this gap and capture more online traffic.",
+    },
+    {
+      type: "warning" as const,
+      title: "Market Share Deficit",
+      description: "Trailing Competitor A by 7 percentage points (28% vs 35%). While growing at 3.2%, consider strategic partnerships or acquisition to accelerate market share gains.",
+    },
+  ];
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Competitive Intelligence</h1>
-          <p className="text-muted-foreground mt-1">Market positioning, competitor tracking, and industry benchmarking</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Competitive Intelligence</h1>
+            <p className="text-muted-foreground mt-1">Market positioning, competitor tracking, and industry benchmarking</p>
+          </div>
+          <ExportData data={competitorData} filename="competitive-data" />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -61,6 +84,8 @@ const Competitive = () => {
             subtitle="YoY growth"
           />
         </div>
+
+        <AISuggestions suggestions={aiSuggestions} title="AI Competitive Insights" />
 
         <div className="grid gap-4 md:grid-cols-2">
           <Card>

@@ -1,5 +1,7 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
+import { AISuggestions } from "@/components/AISuggestions";
+import { ExportData } from "@/components/ExportData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Facebook, Instagram, Linkedin, Heart, MessageCircle, Share2, TrendingUp } from "lucide-react";
 import { BarChart, Bar, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
@@ -18,12 +20,33 @@ const OrganicSocial = () => {
   const [engagementChartType, setEngagementChartType] = useState<ChartType>("bar");
   const [followerChartType, setFollowerChartType] = useState<ChartType>("bar");
 
+  const aiSuggestions = [
+    {
+      type: "opportunity" as const,
+      title: "TikTok Leading Engagement",
+      description: "TikTok shows 8.5% engagement rate, significantly higher than other platforms. Consider reallocating content resources to capitalize on this high-performing channel.",
+    },
+    {
+      type: "insight" as const,
+      title: "Follower Growth Pattern",
+      description: "Instagram and TikTok account for 61% of total followers. Your audience demographic strongly prefers visual-first platforms.",
+    },
+    {
+      type: "warning" as const,
+      title: "Twitter/X Underperforming",
+      description: "Twitter/X shows lowest engagement at 2.4%. Review content strategy or consider reducing resource allocation to this platform.",
+    },
+  ];
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Organic Social Media</h1>
-          <p className="text-muted-foreground mt-1">Monitor engagement and growth across all social platforms</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Organic Social Media</h1>
+            <p className="text-muted-foreground mt-1">Monitor engagement and growth across all social platforms</p>
+          </div>
+          <ExportData data={platformData} filename="organic-social-data" />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -55,6 +78,8 @@ const OrganicSocial = () => {
             subtitle="8.5% engagement"
           />
         </div>
+
+        <AISuggestions suggestions={aiSuggestions} title="AI Social Media Insights" />
 
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
