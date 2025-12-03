@@ -3,6 +3,7 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DashboardNav } from "./DashboardNav";
 import { DashboardHeader } from "./DashboardHeader";
+import { AIChatInterface } from "./AIChatInterface";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -40,6 +41,9 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           {children}
         </main>
       </div>
+
+      {/* AI Chat Interface */}
+      <AIChatInterface />
     </div>
   );
 };

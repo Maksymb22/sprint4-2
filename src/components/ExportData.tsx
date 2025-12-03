@@ -7,7 +7,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Download, FileSpreadsheet, FileJson, FileText } from "lucide-react";
+import { Download, FileSpreadsheet, FileJson, FileText, FileText as FilePdf } from "lucide-react";
+import { PDFExportDialog } from "./PDFExportDialog";
+import { useState } from "react";
 
 interface ExportDataProps {
   data: any[];
@@ -16,6 +18,8 @@ interface ExportDataProps {
 }
 
 export const ExportData = ({ data, filename, className }: ExportDataProps) => {
+  const [showPDFDialog, setShowPDFDialog] = useState(false);
+
   const exportToCSV = () => {
     if (!data || data.length === 0) return;
 
@@ -95,6 +99,10 @@ export const ExportData = ({ data, filename, className }: ExportDataProps) => {
       <DropdownMenuContent align="end" className="w-48">
         <DropdownMenuLabel>Choose Format</DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => setShowPDFDialog(true)}>
+          <FilePdf className="h-4 w-4 mr-2" />
+          Export as PDF
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={exportToCSV}>
           <FileSpreadsheet className="h-4 w-4 mr-2" />
           Export as CSV
@@ -113,5 +121,10 @@ export const ExportData = ({ data, filename, className }: ExportDataProps) => {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+    <PDFExportDialog
+      open={showPDFDialog}
+      onOpenChange={setShowPDFDialog}
+      dashboardName={filename.split('-')[0]}
+    />
   );
 };

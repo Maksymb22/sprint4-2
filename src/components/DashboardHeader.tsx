@@ -1,4 +1,4 @@
-import { Bell, User } from "lucide-react";
+import { Bell, User, Building2, ChevronDown, CheckCircle2, AlertTriangle, Info, Clock, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -6,6 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import {
   Popover,
@@ -15,17 +16,95 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { DateRangeSelector } from "./DateRangeSelector";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
+
+const clients = [
+  { id: "1", name: "Acme Corporation", status: "active", lastSync: "2 min ago" },
+  { id: "2", name: "TechStart Inc.", status: "active", lastSync: "5 min ago" },
+  { id: "3", name: "Global Dynamics", status: "active", lastSync: "1 hour ago" },
+  { id: "4", name: "Innovation Labs", status: "warning", lastSync: "3 hours ago" },
+  { id: "5", name: "Future Systems", status: "active", lastSync: "10 min ago" },
+];
+
+const notifications = [
+  {
+    id: "1",
+    type: "alert" as const,
+    title: "Conversion Rate Drop",
+    message: "Conversion rate decreased by 2.4% in the last 24 hours",
+    time: "5 min ago",
+    unread: true,
+  },
+  {
+    id: "2",
+    type: "success" as const,
+    title: "Revenue Target Achieved",
+    message: "Monthly revenue target of $350K reached",
+    time: "1 hour ago",
+    unread: true,
+  },
+  {
+    id: "3",
+    type: "info" as const,
+    title: "New Data Sync Complete",
+    message: "Facebook Ads data successfully synchronized",
+    time: "2 hours ago",
+    unread: false,
+  },
+  {
+    id: "4",
+    type: "warning" as const,
+    title: "Integration Issue",
+    message: "Twitter/X connection needs attention",
+    time: "3 hours ago",
+    unread: true,
+  },
+  {
+    id: "5",
+    type: "info" as const,
+    title: "Weekly Report Ready",
+    message: "Your weekly performance report is now available",
+    time: "1 day ago",
+    unread: false,
+  },
+];
 
 export const DashboardHeader = () => {
   const navigate = useNavigate();
+  const [selectedClient, setSelectedClient] = useState(clients[0]);
+  const [notificationList, setNotificationList] = useState(notifications);
 
-  const dailySummary = [
-    { metric: "Revenue", change: "+2.3%", trend: "up", value: "$12,450" },
-    { metric: "Active Users", change: "+5.1%", trend: "up", value: "847" },
-    { metric: "Conversion Rate", change: "-0.8%", trend: "down", value: "3.18%" },
-    { metric: "Organic Traffic", change: "+8.4%", trend: "up", value: "2,847" },
-    { metric: "Ad Spend", change: "-1.2%", trend: "down", value: "$1,523" },
-  ];
+  const unreadCount = notificationList.filter(n => n.unread).length;
+
+  const markAsRead = (id: string) => {
+    setNotificationList(prev =>
+      prev.map(n => n.id === id ? { ...n, unread: false } : n)
+    );
+  };
+
+  const markAllAsRead = () => {
+    setNotificationList(prev => prev.map(n => ({ ...n, unread: false })));
+  };
+
+  const removeNotification = (id: string) => {
+    setNotificationList(prev => prev.filter(n => n.id !== id));
+  };
+
+  const getNotificationIcon = (type: string) => {
+    switch (type) {
+      case "alert":
+        return <AlertTriangle className="h-4 w-4 text-red-500" />;
+      case "success":
+        return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+      case "warning":
+        return <AlertTriangle className="h-4 w-4 text-amber-500" />;
+      default:
+        return <Info className="h-4 w-4 text-blue-500" />;
+    }
+  };
 
   const handleProfileClick = () => {
     navigate('/settings?tab=profile');
@@ -49,53 +128,136 @@ export const DashboardHeader = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Date Range Selector */}
+          <DateRangeSelector className="hidden lg:flex" />
+
+          {/* Client Selector */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2">
+                <Building2 className="h-4 w-4" />
+                <span className="hidden md:inline">{selectedClient.name}</span>
+                <ChevronDown className="h-4 w-4 opacity-50" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-64">
+              <DropdownMenuLabel>Select Client</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <ScrollArea className="h-72">
+                {clients.map((client) => (
+                  <DropdownMenuItem
+                    key={client.id}
+                    onClick={() => setSelectedClient(client)}
+                    className="flex items-center justify-between cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className={`h-2 w-2 rounded-full ${
+                        client.status === "active" ? "bg-green-500" : "bg-amber-500"
+                      }`} />
+                      <div>
+                        <p className="text-sm font-medium">{client.name}</p>
+                        <p className="text-xs text-muted-foreground">Synced {client.lastSync}</p>
+                      </div>
+                    </div>
+                    {selectedClient.id === client.id && (
+                      <CheckCircle2 className="h-4 w-4 text-primary" />
+                    )}
+                  </DropdownMenuItem>
+                ))}
+              </ScrollArea>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => navigate('/integrations')}>
+                Manage Clients
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Notification Center */}
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="ghost" size="icon" className="relative">
                 <Bell className="h-5 w-5" />
-                <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs">
-                  5
-                </Badge>
+                {unreadCount > 0 && (
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs">
+                    {unreadCount}
+                  </Badge>
+                )}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-80" align="end">
+            <PopoverContent className="w-96" align="end">
               <div className="space-y-3">
-                <div className="border-b border-border pb-2">
-                  <h3 className="font-semibold text-sm">Daily Summary</h3>
-                  <p className="text-xs text-muted-foreground">Today's key metric changes</p>
-                </div>
-                <div className="space-y-2 max-h-96 overflow-y-auto">
-                  {dailySummary.map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between p-2 rounded-lg hover:bg-accent transition-colors"
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-semibold text-sm">Notifications</h3>
+                    <p className="text-xs text-muted-foreground">
+                      {unreadCount} unread notification{unreadCount !== 1 ? 's' : ''}
+                    </p>
+                  </div>
+                  {unreadCount > 0 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-xs"
+                      onClick={markAllAsRead}
                     >
-                      <div className="flex items-center gap-2">
-                        {item.trend === "up" ? (
-                          <TrendingUp className="h-4 w-4 text-success" />
-                        ) : (
-                          <TrendingDown className="h-4 w-4 text-destructive" />
-                        )}
-                        <div>
-                          <p className="text-sm font-medium">{item.metric}</p>
-                          <p className="text-xs text-muted-foreground">{item.value}</p>
-                        </div>
-                      </div>
-                      <span
-                        className={`text-sm font-medium ${
-                          item.trend === "up" ? "text-success" : "text-destructive"
+                      Mark all read
+                    </Button>
+                  )}
+                </div>
+                <Separator />
+                <ScrollArea className="h-96">
+                  <div className="space-y-2">
+                    {notificationList.map((notification) => (
+                      <div
+                        key={notification.id}
+                        className={`group relative p-3 rounded-lg hover:bg-accent transition-colors cursor-pointer ${
+                          notification.unread ? "bg-primary/5" : ""
                         }`}
+                        onClick={() => markAsRead(notification.id)}
                       >
-                        {item.change}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                <div className="border-t border-border pt-2">
-                  <Button variant="ghost" className="w-full text-xs" onClick={handleViewAllActivity}>
-                    View All Activity
-                  </Button>
-                </div>
+                        <div className="flex gap-3">
+                          <div className="flex-shrink-0 mt-0.5">
+                            {getNotificationIcon(notification.type)}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between gap-2">
+                              <p className="text-sm font-medium">{notification.title}</p>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  removeNotification(notification.id);
+                                }}
+                              >
+                                <X className="h-3 w-3" />
+                              </Button>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {notification.message}
+                            </p>
+                            <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
+                              <Clock className="h-3 w-3" />
+                              {notification.time}
+                            </div>
+                          </div>
+                        </div>
+                        {notification.unread && (
+                          <div className="absolute top-3 right-3 h-2 w-2 rounded-full bg-primary" />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+                <Separator />
+                <Button
+                  variant="ghost"
+                  className="w-full text-xs"
+                  onClick={() => navigate('/activity')}
+                >
+                  View All Notifications
+                </Button>
               </div>
             </PopoverContent>
           </Popover>

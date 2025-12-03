@@ -4,6 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import Login from "./pages/Login";
+import RoleSelection from "./pages/RoleSelection";
+import Integrations from "./pages/Integrations";
 import SearchSEO from "./pages/SearchSEO";
 import OrganicSocial from "./pages/OrganicSocial";
 import PaidSocial from "./pages/PaidSocial";
@@ -28,7 +31,10 @@ const App = () => (
       <Sonner />
       <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/role-selection" element={<RoleSelection />} />
           <Route path="/" element={<Index />} />
+          <Route path="/integrations" element={<Integrations />} />
           <Route path="/search-seo" element={<SearchSEO />} />
           <Route path="/search-seo/keyword-rankings-history" element={<SEOKeywordRankingsHistory />} />
           <Route path="/search-seo/organic-traffic-history" element={<SEOOrganicTrafficHistory />} />

@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Target, Users, TrendingUp, Zap } from "lucide-react";
 import { BarChart, Bar, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
+import { FunnelChart } from "@/components/FunnelChart";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 const funnelData = [
@@ -25,7 +27,7 @@ const COLORS = [
 ];
 
 const Conversions = () => {
-  const [funnelChartType, setFunnelChartType] = useState<ChartType>("bar");
+  const [funnelChartType, setFunnelChartType] = useState<"funnel" | ChartType>("funnel");
 
   const aiSuggestions = [
     {
@@ -92,11 +94,23 @@ const Conversions = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
             <CardTitle>Conversion Funnel</CardTitle>
-            <ChartTypeSelector currentType={funnelChartType} onTypeChange={setFunnelChartType} />
+            <div className="flex gap-2">
+              <Button
+                variant={funnelChartType === "funnel" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setFunnelChartType("funnel")}
+              >
+                Funnel View
+              </Button>
+              <ChartTypeSelector currentType={funnelChartType === "funnel" ? "bar" : funnelChartType} onTypeChange={setFunnelChartType} />
+            </div>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={400}>
-              {funnelChartType === "bar" ? (
+            {funnelChartType === "funnel" ? (
+              <FunnelChart data={funnelData} />
+            ) : (
+              <ResponsiveContainer width="100%" height={400}>
+                {funnelChartType === "bar" ? (
                 <BarChart data={funnelData} layout="vertical" margin={{ left: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis type="number" stroke="hsl(var(--muted-foreground))" />
@@ -149,7 +163,8 @@ const Conversions = () => {
                   <Area type="monotone" dataKey="count" stroke="hsl(var(--chart-1))" fill="hsl(var(--chart-1))" fillOpacity={0.3} name="Count" />
                 </AreaChart>
               )}
-            </ResponsiveContainer>
+              </ResponsiveContainer>
+            )}
           </CardContent>
         </Card>
       </div>
