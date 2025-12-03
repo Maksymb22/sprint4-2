@@ -20,8 +20,8 @@ const Login = () => {
     if (!showMFA) {
       setShowMFA(true);
     } else {
-      // After MFA, go to role selection
-      navigate("/role-selection");
+      // After MFA, go to dashboard
+      navigate("/");
     }
   };
 
@@ -75,7 +75,7 @@ const Login = () => {
                       Remember me
                     </Label>
                   </div>
-                  <Button variant="link" className="px-0 text-sm" type="button">
+                  <Button variant="link" className="px-0 text-sm" type="button" onClick={() => navigate("/forgot-password")}>
                     Forgot password?
                   </Button>
                 </div>
