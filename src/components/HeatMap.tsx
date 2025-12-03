@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 interface HeatMapProps {
   title: string;
   data: number[][];
@@ -5,7 +7,16 @@ interface HeatMapProps {
   yLabels: string[];
 }
 
+interface HoverInfo {
+  value: number;
+  day: string;
+  time: string;
+  x: number;
+  y: number;
+}
+
 export const HeatMap = ({ title, data, xLabels, yLabels }: HeatMapProps) => {
+  const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
   const maxValue = Math.max(...data.flat());
   const minValue = Math.min(...data.flat());
 
@@ -25,9 +36,9 @@ export const HeatMap = ({ title, data, xLabels, yLabels }: HeatMapProps) => {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold">{title}</h3>
-      <div className="overflow-x-auto">
-        <div className="inline-block min-w-full">
+      {title && <h3 className="text-lg font-semibold">{title}</h3>}
+      <div className="flex justify-center">
+        <div className="relative">
           <div className="flex">
             {/* Y-axis labels */}
             <div className="flex flex-col justify-around pr-4">
@@ -62,8 +73,18 @@ export const HeatMap = ({ title, data, xLabels, yLabels }: HeatMapProps) => {
                   {row.map((value, colIndex) => (
                     <div
                       key={colIndex}
-                      className={`w-16 h-12 flex items-center justify-center text-xs font-medium border border-border ${getColor(value)} ${getTextColor(value)} cursor-pointer hover:opacity-80 transition-opacity`}
-                      title={`${yLabels[rowIndex]} at ${xLabels[colIndex]}: ${value}% engagement`}
+                      className={`relative w-16 h-12 flex items-center justify-center text-xs font-medium border border-border ${getColor(value)} ${getTextColor(value)} cursor-pointer hover:opacity-90 hover:scale-105 transition-all`}
+                      onMouseEnter={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        setHoverInfo({
+                          value,
+                          day: yLabels[rowIndex],
+                          time: xLabels[colIndex],
+                          x: rect.left + rect.width / 2,
+                          y: rect.top,
+                        });
+                      }}
+                      onMouseLeave={() => setHoverInfo(null)}
                     >
                       {value}%
                     </div>
@@ -84,6 +105,31 @@ export const HeatMap = ({ title, data, xLabels, yLabels }: HeatMapProps) => {
             </div>
             <span className="text-sm text-muted-foreground">High</span>
           </div>
+
+          {/* Hover Tooltip */}
+          {hoverInfo && (
+            <div
+              className="fixed z-50 pointer-events-none"
+              style={{
+                left: `${hoverInfo.x}px`,
+                top: `${hoverInfo.y - 80}px`,
+                transform: 'translateX(-50%)',
+              }}
+            >
+              <div className="bg-card border border-border rounded-lg shadow-lg p-3 animate-in fade-in duration-200">
+                <div className="text-sm space-y-1">
+                  <div className="font-semibold text-foreground">{hoverInfo.day} at {hoverInfo.time}</div>
+                  <div className="text-primary font-bold text-lg">{hoverInfo.value}% Engagement</div>
+                  <div className="text-xs text-muted-foreground">
+                    {hoverInfo.value >= maxValue * 0.75 ? "Peak engagement time" :
+                     hoverInfo.value >= maxValue * 0.5 ? "Good engagement time" :
+                     hoverInfo.value >= maxValue * 0.25 ? "Moderate engagement" :
+                     "Low engagement"}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

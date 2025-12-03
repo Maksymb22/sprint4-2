@@ -2,6 +2,7 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
 import { AISuggestions } from "@/components/AISuggestions";
 import { ExportData } from "@/components/ExportData";
+import { PDFExportDialog } from "@/components/PDFExportDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Target, Users, TrendingUp, Zap } from "lucide-react";
 import { BarChart, Bar, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
@@ -55,7 +56,10 @@ const Conversions = () => {
             <h1 className="text-3xl font-bold text-foreground">Conversion Performance</h1>
             <p className="text-muted-foreground mt-1">Funnel visualization and customer acquisition metrics</p>
           </div>
-          <ExportData data={funnelData} filename="conversions-data" />
+          <div className="flex gap-2">
+            <PDFExportDialog dashboardName="Conversions" />
+            <ExportData data={funnelData} filename="conversions-data" />
+          </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -102,7 +106,9 @@ const Conversions = () => {
               >
                 Funnel View
               </Button>
-              <ChartTypeSelector currentType={funnelChartType === "funnel" ? "bar" : funnelChartType} onTypeChange={setFunnelChartType} />
+              {funnelChartType !== "funnel" && (
+                <ChartTypeSelector currentType={funnelChartType} onTypeChange={setFunnelChartType} />
+              )}
             </div>
           </CardHeader>
           <CardContent>
