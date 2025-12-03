@@ -50,14 +50,6 @@ const Settings = () => {
                   <Label htmlFor="email">Email</Label>
                   <Input id="email" type="email" placeholder="john.doe@example.com" defaultValue="john.doe@example.com" />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="company">Company</Label>
-                  <Input id="company" placeholder="Acme Inc." defaultValue="Acme Inc." />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="role">Role</Label>
-                  <Input id="role" placeholder="Marketing Manager" defaultValue="Marketing Manager" />
-                </div>
                 <Separator />
                 <Button>Save Changes</Button>
               </CardContent>

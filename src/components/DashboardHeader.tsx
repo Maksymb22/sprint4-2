@@ -1,4 +1,4 @@
-import { Bell, User, Building2, ChevronDown, CheckCircle2, AlertTriangle, Info, Clock, X } from "lucide-react";
+import { Bell, User, CheckCircle2, AlertTriangle, Info, Clock, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -20,14 +20,6 @@ import { DateRangeSelector } from "./DateRangeSelector";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
-
-const clients = [
-  { id: "1", name: "Acme Corporation", status: "active", lastSync: "2 min ago" },
-  { id: "2", name: "TechStart Inc.", status: "active", lastSync: "5 min ago" },
-  { id: "3", name: "Global Dynamics", status: "active", lastSync: "1 hour ago" },
-  { id: "4", name: "Innovation Labs", status: "warning", lastSync: "3 hours ago" },
-  { id: "5", name: "Future Systems", status: "active", lastSync: "10 min ago" },
-];
 
 const notifications = [
   {
@@ -74,7 +66,6 @@ const notifications = [
 
 export const DashboardHeader = () => {
   const navigate = useNavigate();
-  const [selectedClient, setSelectedClient] = useState(clients[0]);
   const [notificationList, setNotificationList] = useState(notifications);
 
   const unreadCount = notificationList.filter(n => n.unread).length;
@@ -130,47 +121,6 @@ export const DashboardHeader = () => {
         <div className="flex items-center gap-2">
           {/* Date Range Selector */}
           <DateRangeSelector className="hidden lg:flex" />
-
-          {/* Client Selector */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2">
-                <Building2 className="h-4 w-4" />
-                <span className="hidden md:inline">{selectedClient.name}</span>
-                <ChevronDown className="h-4 w-4 opacity-50" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-64">
-              <DropdownMenuLabel>Select Client</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <ScrollArea className="h-72">
-                {clients.map((client) => (
-                  <DropdownMenuItem
-                    key={client.id}
-                    onClick={() => setSelectedClient(client)}
-                    className="flex items-center justify-between cursor-pointer"
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className={`h-2 w-2 rounded-full ${
-                        client.status === "active" ? "bg-green-500" : "bg-amber-500"
-                      }`} />
-                      <div>
-                        <p className="text-sm font-medium">{client.name}</p>
-                        <p className="text-xs text-muted-foreground">Synced {client.lastSync}</p>
-                      </div>
-                    </div>
-                    {selectedClient.id === client.id && (
-                      <CheckCircle2 className="h-4 w-4 text-primary" />
-                    )}
-                  </DropdownMenuItem>
-                ))}
-              </ScrollArea>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => navigate('/integrations')}>
-                Manage Clients
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
 
           {/* Notification Center */}
           <Popover>

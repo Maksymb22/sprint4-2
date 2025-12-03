@@ -127,9 +127,7 @@ const Competitive = () => {
                 >
                   <PieChartIcon className="h-4 w-4" />
                 </Button>
-                {shareChartType !== "pie" && (
-                  <ChartTypeSelector currentType={shareChartType} onTypeChange={setShareChartType} />
-                )}
+                <ChartTypeSelector currentType={shareChartType} onTypeChange={setShareChartType} />
               </div>
             </CardHeader>
             <CardContent>
