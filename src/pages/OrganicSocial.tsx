@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Facebook, Instagram, Linkedin, Heart, MessageCircle, Share2, TrendingUp } from "lucide-react";
 import { BarChart, Bar, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
+import { HeatMap } from "@/components/HeatMap";
 import { useState } from "react";
 
 const platformData = [
@@ -15,6 +16,20 @@ const platformData = [
   { platform: "TikTok", followers: 24500, engagement: 8.5, posts: 71 },
   { platform: "Twitter/X", followers: 6700, engagement: 2.4, posts: 38 },
 ];
+
+// Best posting times heat map data (engagement rates by day and hour)
+const heatMapData = [
+  [2.1, 2.5, 3.2, 4.1, 5.2, 6.8, 7.2], // Monday
+  [2.3, 2.8, 3.5, 4.5, 5.5, 7.1, 7.5], // Tuesday
+  [2.5, 3.1, 3.8, 4.8, 5.8, 7.5, 8.1], // Wednesday
+  [2.2, 2.7, 3.3, 4.3, 5.3, 6.9, 7.3], // Thursday
+  [1.9, 2.3, 2.9, 3.8, 4.7, 6.2, 6.8], // Friday
+  [1.5, 1.8, 2.2, 2.8, 3.5, 4.5, 5.1], // Saturday
+  [1.3, 1.6, 2.0, 2.5, 3.2, 4.2, 4.8], // Sunday
+];
+
+const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const hoursOfDay = ["9am", "12pm", "3pm", "6pm", "9pm", "12am", "3am"];
 
 const OrganicSocial = () => {
   const [engagementChartType, setEngagementChartType] = useState<ChartType>("bar");
@@ -190,6 +205,24 @@ const OrganicSocial = () => {
             </CardContent>
           </Card>
         </div>
+
+        {/* Heat Map for Best Posting Times */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Best Posting Times</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Engagement rates by day and time (hover for details)
+            </p>
+          </CardHeader>
+          <CardContent>
+            <HeatMap
+              title=""
+              data={heatMapData}
+              xLabels={hoursOfDay}
+              yLabels={daysOfWeek}
+            />
+          </CardContent>
+        </Card>
       </div>
     </DashboardLayout>
   );

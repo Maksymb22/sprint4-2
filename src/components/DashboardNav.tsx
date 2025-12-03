@@ -7,7 +7,8 @@ import {
   Target,
   TrendingUp,
   FileText,
-  Settings
+  Settings,
+  Plug
 } from "lucide-react";
 import { NavLink } from "./NavLink";
 
@@ -20,6 +21,7 @@ const navItems = [
   { icon: Target, label: "Conversions", href: "/conversions" },
   { icon: TrendingUp, label: "Competitive Intelligence", href: "/competitive" },
   { icon: FileText, label: "Financial & Operations", href: "/financial" },
+  { icon: Plug, label: "Integrations", href: "/integrations" },
 ];
 
 export const DashboardNav = () => {

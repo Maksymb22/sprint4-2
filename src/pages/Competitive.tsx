@@ -4,8 +4,9 @@ import { AISuggestions } from "@/components/AISuggestions";
 import { ExportData } from "@/components/ExportData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Award, TrendingUp, Target, BarChart3 } from "lucide-react";
-import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Legend, BarChart as ReBarChart, Bar, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
+import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Legend, BarChart as ReBarChart, Bar, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell } from "recharts";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 const competitorData = [
@@ -23,8 +24,10 @@ const marketPositionData = [
   { company: "Others", share: 15 },
 ];
 
+const CHART_COLORS = ["hsl(var(--chart-1))", "hsl(var(--chart-2))", "hsl(var(--chart-3))", "hsl(var(--chart-4))"];
+
 const Competitive = () => {
-  const [shareChartType, setShareChartType] = useState<ChartType>("bar");
+  const [shareChartType, setShareChartType] = useState<"pie" | ChartType>("pie");
 
   const aiSuggestions = [
     {
@@ -110,11 +113,48 @@ const Competitive = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Market Share Distribution</CardTitle>
-              <ChartTypeSelector currentType={shareChartType} onTypeChange={setShareChartType} />
+              <div className="flex gap-2">
+                <Button
+                  variant={shareChartType === "pie" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setShareChartType("pie")}
+                >
+                  Pie Chart
+                </Button>
+                <ChartTypeSelector currentType={shareChartType === "pie" ? "bar" : shareChartType} onTypeChange={setShareChartType} />
+              </div>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                {shareChartType === "bar" ? (
+              {shareChartType === "pie" ? (
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={marketPositionData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={true}
+                      label={({ company, share }) => `${company}: ${share}%`}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="share"
+                    >
+                      {marketPositionData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <ResponsiveContainer width="100%" height={300}>
+                  {shareChartType === "bar" ? (
                   <ReBarChart data={marketPositionData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis dataKey="company" stroke="hsl(var(--muted-foreground))" />
@@ -156,8 +196,9 @@ const Competitive = () => {
                     />
                     <Area type="monotone" dataKey="share" stroke="hsl(var(--chart-4))" fill="hsl(var(--chart-4))" fillOpacity={0.3} name="Market Share %" />
                   </AreaChart>
-                )}
-              </ResponsiveContainer>
+                  )}
+                </ResponsiveContainer>
+              )}
             </CardContent>
           </Card>
         </div>
