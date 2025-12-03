@@ -4,10 +4,9 @@ import { AISuggestions } from "@/components/AISuggestions";
 import { ExportData } from "@/components/ExportData";
 import { PDFExportDialog } from "@/components/PDFExportDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Award, TrendingUp, Target, BarChart3, PieChart as PieChartIcon } from "lucide-react";
+import { Award, TrendingUp, Target, BarChart3 } from "lucide-react";
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Legend, BarChart as ReBarChart, Bar, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell } from "recharts";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 const competitorData = [
@@ -117,18 +116,11 @@ const Competitive = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Market Share Distribution</CardTitle>
-              <div className="flex gap-1">
-                <Button
-                  variant={shareChartType === "pie" ? "default" : "outline"}
-                  size="icon"
-                  className="h-8 w-8"
-                  onClick={() => setShareChartType("pie")}
-                  title="Pie Chart"
-                >
-                  <PieChartIcon className="h-4 w-4" />
-                </Button>
-                <ChartTypeSelector currentType={shareChartType} onTypeChange={setShareChartType} />
-              </div>
+              <ChartTypeSelector
+                currentType={shareChartType}
+                onTypeChange={setShareChartType}
+                availableTypes={["pie", "bar", "line", "area"]}
+              />
             </CardHeader>
             <CardContent>
               {shareChartType === "pie" ? (

@@ -1,4 +1,4 @@
-import { Bell, User, CheckCircle2, AlertTriangle, Info, Clock, X } from "lucide-react";
+import { Bell, User, CheckCircle2, AlertTriangle, Info, Clock, X, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -67,6 +67,7 @@ const notifications = [
 export const DashboardHeader = () => {
   const navigate = useNavigate();
   const [notificationList, setNotificationList] = useState(notifications);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const unreadCount = notificationList.filter(n => n.unread).length;
 
@@ -111,6 +112,15 @@ export const DashboardHeader = () => {
     // Could redirect to login page or show confirmation
   };
 
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    // Simulate refresh - in real app would reload data
+    setTimeout(() => {
+      setIsRefreshing(false);
+      window.location.reload();
+    }, 500);
+  };
+
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
       <div className="flex h-16 items-center justify-between px-6">
@@ -121,6 +131,17 @@ export const DashboardHeader = () => {
         <div className="flex items-center gap-2">
           {/* Date Range Selector */}
           <DateRangeSelector className="hidden lg:flex" />
+
+          {/* Manual Refresh Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            title="Refresh data"
+          >
+            <RefreshCw className={`h-5 w-5 ${isRefreshing ? 'animate-spin' : ''}`} />
+          </Button>
 
           {/* Notification Center */}
           <Popover>
