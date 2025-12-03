@@ -32,6 +32,7 @@ export const DateRangeSelector = ({ onRangeChange, className }: DateRangeSelecto
     to: new Date(),
   });
   const [compareMode, setCompareMode] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleDateChange = (newDate: DateRange | undefined) => {
     setDate(newDate);
@@ -41,6 +42,12 @@ export const DateRangeSelector = ({ onRangeChange, className }: DateRangeSelecto
   const handlePresetSelect = (preset: typeof presetRanges[0]) => {
     const range = preset.getValue();
     handleDateChange(range);
+    // Close popover after preset selection
+    setOpen(false);
+  };
+
+  const handleApply = () => {
+    setOpen(false);
   };
 
   const formatDateRange = () => {
@@ -51,11 +58,11 @@ export const DateRangeSelector = ({ onRangeChange, className }: DateRangeSelecto
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" className="justify-start text-left font-normal min-w-[280px]">
             <CalendarIcon className="mr-2 h-4 w-4" />
-            <span className="flex-1">{formatDateRange()}</span>
+            <span className="flex-1 text-xs sm:text-sm">{formatDateRange()}</span>
             <ChevronDown className="h-4 w-4 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -111,11 +118,14 @@ export const DateRangeSelector = ({ onRangeChange, className }: DateRangeSelecto
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => handleDateChange(undefined)}
+                onClick={() => {
+                  handleDateChange(undefined);
+                  setOpen(false);
+                }}
               >
                 Clear
               </Button>
-              <Button size="sm">Apply</Button>
+              <Button size="sm" onClick={handleApply}>Apply</Button>
             </div>
           </div>
         </PopoverContent>

@@ -2,8 +2,9 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
 import { AISuggestions } from "@/components/AISuggestions";
 import { ExportData } from "@/components/ExportData";
+import { PDFExportDialog } from "@/components/PDFExportDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Award, TrendingUp, Target, BarChart3 } from "lucide-react";
+import { Award, TrendingUp, Target, BarChart3, PieChart as PieChartIcon } from "lucide-react";
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Legend, BarChart as ReBarChart, Bar, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell } from "recharts";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
 import { Button } from "@/components/ui/button";
@@ -55,7 +56,10 @@ const Competitive = () => {
             <h1 className="text-3xl font-bold text-foreground">Competitive Intelligence</h1>
             <p className="text-muted-foreground mt-1">Market positioning, competitor tracking, and industry benchmarking</p>
           </div>
-          <ExportData data={competitorData} filename="competitive-data" />
+          <div className="flex gap-2">
+            <PDFExportDialog dashboardName="Competitive Intelligence" />
+            <ExportData data={competitorData} filename="competitive-data" />
+          </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -113,15 +117,19 @@ const Competitive = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Market Share Distribution</CardTitle>
-              <div className="flex gap-2">
+              <div className="flex gap-1">
                 <Button
                   variant={shareChartType === "pie" ? "default" : "outline"}
-                  size="sm"
+                  size="icon"
+                  className="h-8 w-8"
                   onClick={() => setShareChartType("pie")}
+                  title="Pie Chart"
                 >
-                  Pie Chart
+                  <PieChartIcon className="h-4 w-4" />
                 </Button>
-                <ChartTypeSelector currentType={shareChartType === "pie" ? "bar" : shareChartType} onTypeChange={setShareChartType} />
+                {shareChartType !== "pie" && (
+                  <ChartTypeSelector currentType={shareChartType} onTypeChange={setShareChartType} />
+                )}
               </div>
             </CardHeader>
             <CardContent>

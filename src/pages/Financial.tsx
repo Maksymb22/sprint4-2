@@ -2,6 +2,7 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
 import { AISuggestions } from "@/components/AISuggestions";
 import { ExportData } from "@/components/ExportData";
+import { PDFExportDialog } from "@/components/PDFExportDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, TrendingUp, PieChart, Activity } from "lucide-react";
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
@@ -47,7 +48,10 @@ const Financial = () => {
             <h1 className="text-3xl font-bold text-foreground">Financial & Operational</h1>
             <p className="text-muted-foreground mt-1">Revenue tracking, profitability analysis, and operational efficiency</p>
           </div>
-          <ExportData data={financialData} filename="financial-data" />
+          <div className="flex gap-2">
+            <PDFExportDialog dashboardName="Financial & Operations" />
+            <ExportData data={financialData} filename="financial-data" />
+          </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
