@@ -106,9 +106,7 @@ const Conversions = () => {
               >
                 Funnel View
               </Button>
-              {funnelChartType !== "funnel" && (
-                <ChartTypeSelector currentType={funnelChartType} onTypeChange={setFunnelChartType} />
-              )}
+              <ChartTypeSelector currentType={funnelChartType} onTypeChange={setFunnelChartType} />
             </div>
           </CardHeader>
           <CardContent>
