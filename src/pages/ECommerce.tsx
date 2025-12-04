@@ -2,12 +2,20 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
 import { AISuggestions } from "@/components/AISuggestions";
 import { ExportData } from "@/components/ExportData";
+import { WidgetManager, Widget } from "@/components/WidgetManager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShoppingCart, DollarSign, Package, TrendingUp } from "lucide-react";
 import { AreaChart, Area, BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
 import { ChartExportButton } from "@/components/ChartExportButton";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+
+const AVAILABLE_WIDGETS: Widget[] = [
+  { id: "key-metrics", label: "Key Metrics", description: "Revenue, orders, AOV, and conversion rate" },
+  { id: "ai-insights", label: "AI E-Commerce Insights", description: "AI-generated e-commerce recommendations" },
+  { id: "revenue-trends", label: "Revenue Trends", description: "Revenue over time" },
+  { id: "order-volume", label: "Order Volume", description: "Order volume tracking" },
+];
 
 const salesData = [
   { month: "Jan", revenue: 45200, orders: 312, avgOrder: 145 },
@@ -23,6 +31,25 @@ const ECommerce = () => {
   const [ordersChartType, setOrdersChartType] = useState<ChartType>("bar");
   const revenueChartRef = useRef<HTMLDivElement>(null);
   const ordersChartRef = useRef<HTMLDivElement>(null);
+
+  const [visibleWidgets, setVisibleWidgets] = useState<string[]>(() => {
+    const saved = localStorage.getItem("ecommerce-widgets");
+    return saved ? JSON.parse(saved) : AVAILABLE_WIDGETS.map(w => w.id);
+  });
+
+  useEffect(() => {
+    localStorage.setItem("ecommerce-widgets", JSON.stringify(visibleWidgets));
+  }, [visibleWidgets]);
+
+  const handleToggleWidget = (widgetId: string) => {
+    setVisibleWidgets(prev =>
+      prev.includes(widgetId)
+        ? prev.filter(id => id !== widgetId)
+        : [...prev, widgetId]
+    );
+  };
+
+  const isVisible = (widgetId: string) => visibleWidgets.includes(widgetId);
 
   const aiSuggestions = [
     {
@@ -50,13 +77,21 @@ const ECommerce = () => {
             <h1 className="text-3xl font-bold text-foreground">E-Commerce Performance</h1>
             <p className="text-muted-foreground mt-1">Sales metrics, product analytics, and customer journey tracking</p>
           </div>
-          <ExportData
-            data={salesData}
-            filename="ecommerce-data"
-            dashboardName="E-Commerce"
-          />
+          <div className="flex gap-2">
+            <WidgetManager
+              widgets={AVAILABLE_WIDGETS}
+              visibleWidgets={visibleWidgets}
+              onToggleWidget={handleToggleWidget}
+            />
+            <ExportData
+              data={salesData}
+              filename="ecommerce-data"
+              dashboardName="E-Commerce"
+            />
+          </div>
         </div>
 
+        {isVisible("key-metrics") && (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             title="Total Revenue"
@@ -87,10 +122,14 @@ const ECommerce = () => {
             subtitle="Visitor to customer"
           />
         </div>
+        )}
 
-        <AISuggestions suggestions={aiSuggestions} title="AI E-Commerce Insights" />
+        {isVisible("ai-insights") && (
+          <AISuggestions suggestions={aiSuggestions} title="AI E-Commerce Insights" />
+        )}
 
         <div className="grid gap-4 md:grid-cols-2">
+          {isVisible("revenue-trends") && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Revenue Trends</CardTitle>
@@ -106,8 +145,8 @@ const ECommerce = () => {
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
                     <YAxis stroke="hsl(var(--muted-foreground))" />
-                    <Tooltip 
-                      contentStyle={{ 
+                    <Tooltip
+                      contentStyle={{
                         backgroundColor: 'hsl(var(--card))',
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '8px'
@@ -120,8 +159,8 @@ const ECommerce = () => {
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
                     <YAxis stroke="hsl(var(--muted-foreground))" />
-                    <Tooltip 
-                      contentStyle={{ 
+                    <Tooltip
+                      contentStyle={{
                         backgroundColor: 'hsl(var(--card))',
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '8px'
@@ -134,8 +173,8 @@ const ECommerce = () => {
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
                     <YAxis stroke="hsl(var(--muted-foreground))" />
-                    <Tooltip 
-                      contentStyle={{ 
+                    <Tooltip
+                      contentStyle={{
                         backgroundColor: 'hsl(var(--card))',
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '8px'
@@ -147,7 +186,9 @@ const ECommerce = () => {
               </ResponsiveContainer>
             </CardContent>
           </Card>
+          )}
 
+          {isVisible("order-volume") && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Order Volume</CardTitle>
@@ -204,6 +245,7 @@ const ECommerce = () => {
               </ResponsiveContainer>
             </CardContent>
           </Card>
+          )}
         </div>
       </div>
     </DashboardLayout>

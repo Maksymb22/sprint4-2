@@ -2,6 +2,7 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
 import { AISuggestions } from "@/components/AISuggestions";
 import { ExportData } from "@/components/ExportData";
+import { WidgetManager, Widget } from "@/components/WidgetManager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Target, Users, TrendingUp, Zap } from "lucide-react";
 import { BarChart, Bar, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
@@ -9,7 +10,13 @@ import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
 import { ChartExportButton } from "@/components/ChartExportButton";
 import { FunnelChart } from "@/components/FunnelChart";
 import { Button } from "@/components/ui/button";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+
+const AVAILABLE_WIDGETS: Widget[] = [
+  { id: "key-metrics", label: "Key Metrics", description: "Overall conversion, lead conversion, qualified rate, close rate" },
+  { id: "ai-insights", label: "AI Conversion Insights", description: "AI-generated conversion recommendations" },
+  { id: "funnel-chart", label: "Conversion Funnel", description: "Visual funnel representation" },
+];
 
 const funnelData = [
   { stage: "Visitors", count: 45800, rate: 100 },
@@ -30,6 +37,25 @@ const COLORS = [
 const Conversions = () => {
   const [funnelChartType, setFunnelChartType] = useState<"funnel" | "bar">("funnel");
   const funnelChartRef = useRef<HTMLDivElement>(null);
+
+  const [visibleWidgets, setVisibleWidgets] = useState<string[]>(() => {
+    const saved = localStorage.getItem("conversions-widgets");
+    return saved ? JSON.parse(saved) : AVAILABLE_WIDGETS.map(w => w.id);
+  });
+
+  useEffect(() => {
+    localStorage.setItem("conversions-widgets", JSON.stringify(visibleWidgets));
+  }, [visibleWidgets]);
+
+  const handleToggleWidget = (widgetId: string) => {
+    setVisibleWidgets(prev =>
+      prev.includes(widgetId)
+        ? prev.filter(id => id !== widgetId)
+        : [...prev, widgetId]
+    );
+  };
+
+  const isVisible = (widgetId: string) => visibleWidgets.includes(widgetId);
 
   const aiSuggestions = [
     {
@@ -57,13 +83,21 @@ const Conversions = () => {
             <h1 className="text-3xl font-bold text-foreground">Conversion Performance</h1>
             <p className="text-muted-foreground mt-1">Funnel visualization and customer acquisition metrics</p>
           </div>
-          <ExportData
-            data={funnelData}
-            filename="conversions-data"
-            dashboardName="Conversions"
-          />
+          <div className="flex gap-2">
+            <WidgetManager
+              widgets={AVAILABLE_WIDGETS}
+              visibleWidgets={visibleWidgets}
+              onToggleWidget={handleToggleWidget}
+            />
+            <ExportData
+              data={funnelData}
+              filename="conversions-data"
+              dashboardName="Conversions"
+            />
+          </div>
         </div>
 
+        {isVisible("key-metrics") && (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             title="Overall Conversion"
@@ -94,9 +128,13 @@ const Conversions = () => {
             subtitle="Opportunity to customer"
           />
         </div>
+        )}
 
-        <AISuggestions suggestions={aiSuggestions} title="AI Conversion Insights" />
+        {isVisible("ai-insights") && (
+          <AISuggestions suggestions={aiSuggestions} title="AI Conversion Insights" />
+        )}
 
+        {isVisible("funnel-chart") && (
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
             <CardTitle>Conversion Funnel</CardTitle>
@@ -144,6 +182,7 @@ const Conversions = () => {
             )}
           </CardContent>
         </Card>
+        )}
       </div>
     </DashboardLayout>
   );
