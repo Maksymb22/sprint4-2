@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, TrendingUp, PieChart, Activity } from "lucide-react";
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
-import { useState } from "react";
+import { ChartExportButton } from "@/components/ChartExportButton";
+import { useState, useRef } from "react";
 
 const financialData = [
   { month: "Jan", revenue: 156000, expenses: 98000, profit: 58000 },
@@ -20,6 +21,8 @@ const financialData = [
 const Financial = () => {
   const [revenueChartType, setRevenueChartType] = useState<ChartType>("line");
   const [profitChartType, setProfitChartType] = useState<ChartType>("area");
+  const revenueChartRef = useRef<HTMLDivElement>(null);
+  const profitChartRef = useRef<HTMLDivElement>(null);
 
   const aiSuggestions = [
     {
@@ -91,9 +94,12 @@ const Financial = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Revenue vs Expenses</CardTitle>
-              <ChartTypeSelector currentType={revenueChartType} onTypeChange={setRevenueChartType} />
+              <div className="flex gap-2">
+                <ChartExportButton chartRef={revenueChartRef} filename="revenue-vs-expenses" />
+                <ChartTypeSelector currentType={revenueChartType} onTypeChange={setRevenueChartType} />
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent ref={revenueChartRef}>
               <ResponsiveContainer width="100%" height={300}>
                 {revenueChartType === "line" ? (
                   <LineChart data={financialData}>
@@ -151,9 +157,12 @@ const Financial = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Profit Trends</CardTitle>
-              <ChartTypeSelector currentType={profitChartType} onTypeChange={setProfitChartType} />
+              <div className="flex gap-2">
+                <ChartExportButton chartRef={profitChartRef} filename="profit-trends" />
+                <ChartTypeSelector currentType={profitChartType} onTypeChange={setProfitChartType} />
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent ref={profitChartRef}>
               <ResponsiveContainer width="100%" height={300}>
                 {profitChartType === "area" ? (
                   <AreaChart data={financialData}>

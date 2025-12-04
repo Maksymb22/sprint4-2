@@ -6,8 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Facebook, Instagram, Linkedin, Heart, MessageCircle, Share2, TrendingUp } from "lucide-react";
 import { BarChart, Bar, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
+import { ChartExportButton } from "@/components/ChartExportButton";
 import { HeatMap } from "@/components/HeatMap";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 const platformData = [
   { platform: "Facebook", followers: 12400, engagement: 4.2, posts: 45 },
@@ -34,6 +35,8 @@ const hoursOfDay = ["9am", "12pm", "3pm", "6pm", "9pm", "12am", "3am"];
 const OrganicSocial = () => {
   const [engagementChartType, setEngagementChartType] = useState<ChartType>("bar");
   const [followerChartType, setFollowerChartType] = useState<ChartType>("bar");
+  const engagementChartRef = useRef<HTMLDivElement>(null);
+  const followerChartRef = useRef<HTMLDivElement>(null);
 
   const aiSuggestions = [
     {
@@ -104,9 +107,12 @@ const OrganicSocial = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Platform Engagement Rates</CardTitle>
-              <ChartTypeSelector currentType={engagementChartType} onTypeChange={setEngagementChartType} />
+              <div className="flex gap-2">
+                <ChartExportButton chartRef={engagementChartRef} filename="platform-engagement-rates" />
+                <ChartTypeSelector currentType={engagementChartType} onTypeChange={setEngagementChartType} />
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent ref={engagementChartRef}>
               <ResponsiveContainer width="100%" height={300}>
                 {engagementChartType === "bar" ? (
                   <BarChart data={platformData}>
@@ -158,9 +164,12 @@ const OrganicSocial = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Follower Distribution</CardTitle>
-              <ChartTypeSelector currentType={followerChartType} onTypeChange={setFollowerChartType} />
+              <div className="flex gap-2">
+                <ChartExportButton chartRef={followerChartRef} filename="follower-distribution" />
+                <ChartTypeSelector currentType={followerChartType} onTypeChange={setFollowerChartType} />
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent ref={followerChartRef}>
               <ResponsiveContainer width="100%" height={300}>
                 {followerChartType === "bar" ? (
                   <BarChart data={platformData}>

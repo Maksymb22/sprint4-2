@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, Target, TrendingUp, Users } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
-import { useState } from "react";
+import { ChartExportButton } from "@/components/ChartExportButton";
+import { useState, useRef } from "react";
 
 const campaignData = [
   { month: "Jan", spend: 8500, conversions: 142, roas: 3.2 },
@@ -20,6 +21,8 @@ const campaignData = [
 const PaidSocial = () => {
   const [performanceChartType, setPerformanceChartType] = useState<ChartType>("line");
   const [spendChartType, setSpendChartType] = useState<ChartType>("line");
+  const performanceChartRef = useRef<HTMLDivElement>(null);
+  const spendChartRef = useRef<HTMLDivElement>(null);
 
   const aiSuggestions = [
     {
@@ -91,9 +94,12 @@ const PaidSocial = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Campaign Performance Trends</CardTitle>
-              <ChartTypeSelector currentType={performanceChartType} onTypeChange={setPerformanceChartType} />
+              <div className="flex gap-2">
+                <ChartExportButton chartRef={performanceChartRef} filename="campaign-performance-trends" />
+                <ChartTypeSelector currentType={performanceChartType} onTypeChange={setPerformanceChartType} />
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent ref={performanceChartRef}>
               <ResponsiveContainer width="100%" height={300}>
                 {performanceChartType === "line" ? (
                   <LineChart data={campaignData}>
@@ -151,9 +157,12 @@ const PaidSocial = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Ad Spend Over Time</CardTitle>
-              <ChartTypeSelector currentType={spendChartType} onTypeChange={setSpendChartType} />
+              <div className="flex gap-2">
+                <ChartExportButton chartRef={spendChartRef} filename="ad-spend-over-time" />
+                <ChartTypeSelector currentType={spendChartType} onTypeChange={setSpendChartType} />
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent ref={spendChartRef}>
               <ResponsiveContainer width="100%" height={300}>
                 {spendChartType === "line" ? (
                   <LineChart data={campaignData}>

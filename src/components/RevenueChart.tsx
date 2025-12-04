@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, LineChart, Line, BarChart, Bar } from "recharts";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
-import { useState } from "react";
+import { ChartExportButton } from "@/components/ChartExportButton";
+import { useState, useRef } from "react";
 
 const data = [
   { month: "Jan", revenue: 45000, target: 50000 },
@@ -14,6 +15,7 @@ const data = [
 
 export const RevenueChart = () => {
   const [chartType, setChartType] = useState<ChartType>("area");
+  const chartRef = useRef<HTMLDivElement>(null);
 
   const renderChart = () => {
     const commonProps = {
@@ -91,9 +93,12 @@ export const RevenueChart = () => {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <CardTitle>Revenue Trends</CardTitle>
-        <ChartTypeSelector currentType={chartType} onTypeChange={setChartType} />
+        <div className="flex gap-2">
+          <ChartExportButton chartRef={chartRef} filename="revenue-trends" />
+          <ChartTypeSelector currentType={chartType} onTypeChange={setChartType} />
+        </div>
       </CardHeader>
-      <CardContent>
+      <CardContent ref={chartRef}>
         <ResponsiveContainer width="100%" height={300}>
           {renderChart()}
         </ResponsiveContainer>
