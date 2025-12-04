@@ -143,15 +143,59 @@ const Competitive = () => {
               <ChartExportButton chartRef={comparisonChartRef} filename="competitive-comparison" />
             </CardHeader>
             <CardContent ref={comparisonChartRef}>
-              <ResponsiveContainer width="100%" height={300}>
-                <RadarChart data={competitorData}>
-                  <PolarGrid stroke="hsl(var(--border))" />
-                  <PolarAngleAxis dataKey="metric" stroke="hsl(var(--muted-foreground))" />
-                  <PolarRadiusAxis stroke="hsl(var(--muted-foreground))" />
-                  <Radar name="Your Company" dataKey="value" stroke="hsl(var(--chart-1))" fill="hsl(var(--chart-1))" fillOpacity={0.3} />
-                  <Radar name="Competitor A" dataKey="competitor1" stroke="hsl(var(--chart-2))" fill="hsl(var(--chart-2))" fillOpacity={0.3} />
-                  <Radar name="Competitor B" dataKey="competitor2" stroke="hsl(var(--chart-3))" fill="hsl(var(--chart-3))" fillOpacity={0.3} />
-                  <Legend />
+              <ResponsiveContainer width="100%" height={400}>
+                <RadarChart data={competitorData} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
+                  <PolarGrid stroke="hsl(var(--border))" strokeWidth={1.5} />
+                  <PolarAngleAxis
+                    dataKey="metric"
+                    stroke="hsl(var(--muted-foreground))"
+                    tick={{ fill: 'hsl(var(--foreground))', fontSize: 12, fontWeight: 500 }}
+                  />
+                  <PolarRadiusAxis
+                    angle={90}
+                    domain={[0, 100]}
+                    stroke="hsl(var(--muted-foreground))"
+                    tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+                  />
+                  <Radar
+                    name="Your Company"
+                    dataKey="value"
+                    stroke="hsl(var(--chart-1))"
+                    fill="hsl(var(--chart-1))"
+                    fillOpacity={0.25}
+                    strokeWidth={3}
+                  />
+                  <Radar
+                    name="Competitor A"
+                    dataKey="competitor1"
+                    stroke="hsl(var(--chart-2))"
+                    fill="hsl(var(--chart-2))"
+                    fillOpacity={0.2}
+                    strokeWidth={3}
+                  />
+                  <Radar
+                    name="Competitor B"
+                    dataKey="competitor2"
+                    stroke="hsl(var(--chart-3))"
+                    fill="hsl(var(--chart-3))"
+                    fillOpacity={0.15}
+                    strokeWidth={3}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'hsl(var(--card))',
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '8px',
+                      padding: '12px'
+                    }}
+                    formatter={(value: number) => [`${value}`, '']}
+                    labelStyle={{ fontWeight: 600, marginBottom: '8px' }}
+                  />
+                  <Legend
+                    wrapperStyle={{ paddingTop: '20px' }}
+                    iconType="line"
+                    iconSize={20}
+                  />
                 </RadarChart>
               </ResponsiveContainer>
             </CardContent>
