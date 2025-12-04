@@ -2,12 +2,20 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
 import { AISuggestions } from "@/components/AISuggestions";
 import { ExportData } from "@/components/ExportData";
+import { WidgetManager, Widget } from "@/components/WidgetManager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, Target, TrendingUp, Users } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
 import { ChartExportButton } from "@/components/ChartExportButton";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+
+const AVAILABLE_WIDGETS: Widget[] = [
+  { id: "key-metrics", label: "Key Metrics", description: "Ad spend, conversions, ROAS, and cost per conversion" },
+  { id: "ai-insights", label: "AI Paid Media Insights", description: "AI-generated campaign recommendations" },
+  { id: "performance-trends", label: "Campaign Performance Trends", description: "Conversions and ROAS over time" },
+  { id: "ad-spend", label: "Ad Spend Over Time", description: "Ad spend tracking" },
+];
 
 const campaignData = [
   { month: "Jan", spend: 8500, conversions: 142, roas: 3.2 },
@@ -23,6 +31,25 @@ const PaidSocial = () => {
   const [spendChartType, setSpendChartType] = useState<ChartType>("line");
   const performanceChartRef = useRef<HTMLDivElement>(null);
   const spendChartRef = useRef<HTMLDivElement>(null);
+
+  const [visibleWidgets, setVisibleWidgets] = useState<string[]>(() => {
+    const saved = localStorage.getItem("paid-social-widgets");
+    return saved ? JSON.parse(saved) : AVAILABLE_WIDGETS.map(w => w.id);
+  });
+
+  useEffect(() => {
+    localStorage.setItem("paid-social-widgets", JSON.stringify(visibleWidgets));
+  }, [visibleWidgets]);
+
+  const handleToggleWidget = (widgetId: string) => {
+    setVisibleWidgets(prev =>
+      prev.includes(widgetId)
+        ? prev.filter(id => id !== widgetId)
+        : [...prev, widgetId]
+    );
+  };
+
+  const isVisible = (widgetId: string) => visibleWidgets.includes(widgetId);
 
   const aiSuggestions = [
     {
@@ -50,13 +77,21 @@ const PaidSocial = () => {
             <h1 className="text-3xl font-bold text-foreground">Paid Social Media</h1>
             <p className="text-muted-foreground mt-1">Track ROI, ad spend, and campaign performance</p>
           </div>
-          <ExportData
-            data={campaignData}
-            filename="paid-social-data"
-            dashboardName="Paid Social"
-          />
+          <div className="flex gap-2">
+            <WidgetManager
+              widgets={AVAILABLE_WIDGETS}
+              visibleWidgets={visibleWidgets}
+              onToggleWidget={handleToggleWidget}
+            />
+            <ExportData
+              data={campaignData}
+              filename="paid-social-data"
+              dashboardName="Paid Social"
+            />
+          </div>
         </div>
 
+        {isVisible("key-metrics") && (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             title="Total Ad Spend"
@@ -87,10 +122,15 @@ const PaidSocial = () => {
             subtitle="Average CPC"
           />
         </div>
+        )}
 
-        <AISuggestions suggestions={aiSuggestions} title="AI Paid Media Insights" />
+        {isVisible("ai-insights") && (
+          <AISuggestions suggestions={aiSuggestions} title="AI Paid Media Insights" />
+        )}
 
+        {(isVisible("performance-trends") || isVisible("ad-spend")) && (
         <div className="grid gap-4 md:grid-cols-2">
+          {isVisible("performance-trends") && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Campaign Performance Trends</CardTitle>
@@ -153,7 +193,9 @@ const PaidSocial = () => {
               </ResponsiveContainer>
             </CardContent>
           </Card>
+          )}
 
+          {isVisible("ad-spend") && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Ad Spend Over Time</CardTitle>
@@ -210,7 +252,9 @@ const PaidSocial = () => {
               </ResponsiveContainer>
             </CardContent>
           </Card>
+          )}
         </div>
+        )}
       </div>
     </DashboardLayout>
   );

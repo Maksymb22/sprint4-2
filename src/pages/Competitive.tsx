@@ -2,12 +2,20 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
 import { AISuggestions } from "@/components/AISuggestions";
 import { ExportData } from "@/components/ExportData";
+import { WidgetManager, Widget } from "@/components/WidgetManager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Award, TrendingUp, Target, BarChart3 } from "lucide-react";
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Legend, BarChart as ReBarChart, Bar, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell } from "recharts";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
 import { ChartExportButton } from "@/components/ChartExportButton";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+
+const AVAILABLE_WIDGETS: Widget[] = [
+  { id: "key-metrics", label: "Key Metrics", description: "Market position, share, competitive index, and growth" },
+  { id: "ai-insights", label: "AI Competitive Insights", description: "AI-generated competitive analysis" },
+  { id: "competitive-comparison", label: "Competitive Comparison", description: "Radar chart comparing key metrics" },
+  { id: "market-share", label: "Market Share Distribution", description: "Market share breakdown" },
+];
 
 const competitorData = [
   { metric: "Market Share", value: 28, competitor1: 35, competitor2: 22 },
@@ -30,6 +38,25 @@ const Competitive = () => {
   const [shareChartType, setShareChartType] = useState<"pie" | "bar">("pie");
   const comparisonChartRef = useRef<HTMLDivElement>(null);
   const shareChartRef = useRef<HTMLDivElement>(null);
+
+  const [visibleWidgets, setVisibleWidgets] = useState<string[]>(() => {
+    const saved = localStorage.getItem("competitive-widgets");
+    return saved ? JSON.parse(saved) : AVAILABLE_WIDGETS.map(w => w.id);
+  });
+
+  useEffect(() => {
+    localStorage.setItem("competitive-widgets", JSON.stringify(visibleWidgets));
+  }, [visibleWidgets]);
+
+  const handleToggleWidget = (widgetId: string) => {
+    setVisibleWidgets(prev =>
+      prev.includes(widgetId)
+        ? prev.filter(id => id !== widgetId)
+        : [...prev, widgetId]
+    );
+  };
+
+  const isVisible = (widgetId: string) => visibleWidgets.includes(widgetId);
 
   const aiSuggestions = [
     {
@@ -57,13 +84,21 @@ const Competitive = () => {
             <h1 className="text-3xl font-bold text-foreground">Competitive Intelligence</h1>
             <p className="text-muted-foreground mt-1">Market positioning, competitor tracking, and industry benchmarking</p>
           </div>
-          <ExportData
-            data={competitorData}
-            filename="competitive-data"
-            dashboardName="Competitive Intelligence"
-          />
+          <div className="flex gap-2">
+            <WidgetManager
+              widgets={AVAILABLE_WIDGETS}
+              visibleWidgets={visibleWidgets}
+              onToggleWidget={handleToggleWidget}
+            />
+            <ExportData
+              data={competitorData}
+              filename="competitive-data"
+              dashboardName="Competitive Intelligence"
+            />
+          </div>
         </div>
 
+        {isVisible("key-metrics") && (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             title="Market Position"
@@ -93,10 +128,15 @@ const Competitive = () => {
             subtitle="YoY growth"
           />
         </div>
+        )}
 
-        <AISuggestions suggestions={aiSuggestions} title="AI Competitive Insights" />
+        {isVisible("ai-insights") && (
+          <AISuggestions suggestions={aiSuggestions} title="AI Competitive Insights" />
+        )}
 
+        {(isVisible("competitive-comparison") || isVisible("market-share")) && (
         <div className="grid gap-4 md:grid-cols-2">
+          {isVisible("competitive-comparison") && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Competitive Comparison</CardTitle>
@@ -116,7 +156,9 @@ const Competitive = () => {
               </ResponsiveContainer>
             </CardContent>
           </Card>
+          )}
 
+          {isVisible("market-share") && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Market Share Distribution</CardTitle>
@@ -176,7 +218,9 @@ const Competitive = () => {
               )}
             </CardContent>
           </Card>
+          )}
         </div>
+        )}
       </div>
     </DashboardLayout>
   );

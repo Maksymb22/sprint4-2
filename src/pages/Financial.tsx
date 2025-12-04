@@ -2,12 +2,13 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
 import { AISuggestions } from "@/components/AISuggestions";
 import { ExportData } from "@/components/ExportData";
+import { WidgetManager, Widget } from "@/components/WidgetManager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, TrendingUp, PieChart, Activity } from "lucide-react";
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
 import { ChartExportButton } from "@/components/ChartExportButton";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const financialData = [
   { month: "Jan", revenue: 156000, expenses: 98000, profit: 58000 },
@@ -18,11 +19,37 @@ const financialData = [
   { month: "Jun", revenue: 234000, expenses: 132000, profit: 102000 },
 ];
 
+const AVAILABLE_WIDGETS: Widget[] = [
+  { id: "key-metrics", label: "Key Metrics", description: "Total revenue, net profit, profit margin, and operating efficiency" },
+  { id: "ai-insights", label: "AI Financial Insights", description: "AI-generated financial recommendations" },
+  { id: "revenue-expenses", label: "Revenue vs Expenses", description: "Revenue and expense comparison" },
+  { id: "profit-trends", label: "Profit Trends", description: "Net profit over time" },
+];
+
 const Financial = () => {
   const [revenueChartType, setRevenueChartType] = useState<ChartType>("line");
   const [profitChartType, setProfitChartType] = useState<ChartType>("area");
   const revenueChartRef = useRef<HTMLDivElement>(null);
   const profitChartRef = useRef<HTMLDivElement>(null);
+
+  const [visibleWidgets, setVisibleWidgets] = useState<string[]>(() => {
+    const saved = localStorage.getItem("financial-widgets");
+    return saved ? JSON.parse(saved) : AVAILABLE_WIDGETS.map(w => w.id);
+  });
+
+  useEffect(() => {
+    localStorage.setItem("financial-widgets", JSON.stringify(visibleWidgets));
+  }, [visibleWidgets]);
+
+  const handleToggleWidget = (widgetId: string) => {
+    setVisibleWidgets(prev =>
+      prev.includes(widgetId)
+        ? prev.filter(id => id !== widgetId)
+        : [...prev, widgetId]
+    );
+  };
+
+  const isVisible = (widgetId: string) => visibleWidgets.includes(widgetId);
 
   const aiSuggestions = [
     {
@@ -50,13 +77,21 @@ const Financial = () => {
             <h1 className="text-3xl font-bold text-foreground">Financial & Operational</h1>
             <p className="text-muted-foreground mt-1">Revenue tracking, profitability analysis, and operational efficiency</p>
           </div>
-          <ExportData
-            data={financialData}
-            filename="financial-data"
-            dashboardName="Financial & Operations"
-          />
+          <div className="flex gap-2">
+            <WidgetManager
+              widgets={AVAILABLE_WIDGETS}
+              visibleWidgets={visibleWidgets}
+              onToggleWidget={handleToggleWidget}
+            />
+            <ExportData
+              data={financialData}
+              filename="financial-data"
+              dashboardName="Financial & Operations"
+            />
+          </div>
         </div>
 
+        {isVisible("key-metrics") && (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             title="Total Revenue"
@@ -87,10 +122,14 @@ const Financial = () => {
             subtitle="Efficiency score"
           />
         </div>
+        )}
 
-        <AISuggestions suggestions={aiSuggestions} title="AI Financial Insights" />
+        {isVisible("ai-insights") && (
+          <AISuggestions suggestions={aiSuggestions} title="AI Financial Insights" />
+        )}
 
         <div className="grid gap-4 md:grid-cols-2">
+          {isVisible("revenue-expenses") && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Revenue vs Expenses</CardTitle>
@@ -106,8 +145,8 @@ const Financial = () => {
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
                     <YAxis stroke="hsl(var(--muted-foreground))" />
-                    <Tooltip 
-                      contentStyle={{ 
+                    <Tooltip
+                      contentStyle={{
                         backgroundColor: 'hsl(var(--card))',
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '8px'
@@ -122,8 +161,8 @@ const Financial = () => {
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
                     <YAxis stroke="hsl(var(--muted-foreground))" />
-                    <Tooltip 
-                      contentStyle={{ 
+                    <Tooltip
+                      contentStyle={{
                         backgroundColor: 'hsl(var(--card))',
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '8px'
@@ -138,8 +177,8 @@ const Financial = () => {
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
                     <YAxis stroke="hsl(var(--muted-foreground))" />
-                    <Tooltip 
-                      contentStyle={{ 
+                    <Tooltip
+                      contentStyle={{
                         backgroundColor: 'hsl(var(--card))',
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '8px'
@@ -153,7 +192,9 @@ const Financial = () => {
               </ResponsiveContainer>
             </CardContent>
           </Card>
+          )}
 
+          {isVisible("profit-trends") && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Profit Trends</CardTitle>
@@ -210,6 +251,7 @@ const Financial = () => {
               </ResponsiveContainer>
             </CardContent>
           </Card>
+          )}
         </div>
       </div>
     </DashboardLayout>

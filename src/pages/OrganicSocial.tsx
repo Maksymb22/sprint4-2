@@ -2,13 +2,14 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
 import { AISuggestions } from "@/components/AISuggestions";
 import { ExportData } from "@/components/ExportData";
+import { WidgetManager, Widget } from "@/components/WidgetManager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Facebook, Instagram, Linkedin, Heart, MessageCircle, Share2, TrendingUp } from "lucide-react";
 import { BarChart, Bar, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
 import { ChartExportButton } from "@/components/ChartExportButton";
 import { HeatMap } from "@/components/HeatMap";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const platformData = [
   { platform: "Facebook", followers: 12400, engagement: 4.2, posts: 45 },
@@ -32,11 +33,38 @@ const heatMapData = [
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const hoursOfDay = ["9am", "12pm", "3pm", "6pm", "9pm", "12am", "3am"];
 
+const AVAILABLE_WIDGETS: Widget[] = [
+  { id: "key-metrics", label: "Key Metrics", description: "Total followers, engagement rate, posts, and best performing platform" },
+  { id: "ai-insights", label: "AI Social Media Insights", description: "AI-generated social media recommendations" },
+  { id: "engagement-rates", label: "Platform Engagement Rates", description: "Engagement comparison across platforms" },
+  { id: "follower-distribution", label: "Follower Distribution", description: "Follower counts by platform" },
+  { id: "posting-times", label: "Best Posting Times", description: "Heat map of engagement by day and time" },
+];
+
 const OrganicSocial = () => {
   const [engagementChartType, setEngagementChartType] = useState<ChartType>("bar");
   const [followerChartType, setFollowerChartType] = useState<ChartType>("bar");
   const engagementChartRef = useRef<HTMLDivElement>(null);
   const followerChartRef = useRef<HTMLDivElement>(null);
+
+  const [visibleWidgets, setVisibleWidgets] = useState<string[]>(() => {
+    const saved = localStorage.getItem("organic-social-widgets");
+    return saved ? JSON.parse(saved) : AVAILABLE_WIDGETS.map(w => w.id);
+  });
+
+  useEffect(() => {
+    localStorage.setItem("organic-social-widgets", JSON.stringify(visibleWidgets));
+  }, [visibleWidgets]);
+
+  const handleToggleWidget = (widgetId: string) => {
+    setVisibleWidgets(prev =>
+      prev.includes(widgetId)
+        ? prev.filter(id => id !== widgetId)
+        : [...prev, widgetId]
+    );
+  };
+
+  const isVisible = (widgetId: string) => visibleWidgets.includes(widgetId);
 
   const aiSuggestions = [
     {
@@ -64,13 +92,21 @@ const OrganicSocial = () => {
             <h1 className="text-3xl font-bold text-foreground">Organic Social Media</h1>
             <p className="text-muted-foreground mt-1">Monitor engagement and growth across all social platforms</p>
           </div>
-          <ExportData
-            data={platformData}
-            filename="organic-social-data"
-            dashboardName="Organic Social"
-          />
+          <div className="flex gap-2">
+            <WidgetManager
+              widgets={AVAILABLE_WIDGETS}
+              visibleWidgets={visibleWidgets}
+              onToggleWidget={handleToggleWidget}
+            />
+            <ExportData
+              data={platformData}
+              filename="organic-social-data"
+              dashboardName="Organic Social"
+            />
+          </div>
         </div>
 
+        {isVisible("key-metrics") && (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             title="Total Followers"
@@ -100,10 +136,14 @@ const OrganicSocial = () => {
             subtitle="8.5% engagement"
           />
         </div>
+        )}
 
-        <AISuggestions suggestions={aiSuggestions} title="AI Social Media Insights" />
+        {isVisible("ai-insights") && (
+          <AISuggestions suggestions={aiSuggestions} title="AI Social Media Insights" />
+        )}
 
         <div className="grid gap-4 md:grid-cols-2">
+          {isVisible("engagement-rates") && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Platform Engagement Rates</CardTitle>
@@ -119,8 +159,8 @@ const OrganicSocial = () => {
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis dataKey="platform" stroke="hsl(var(--muted-foreground))" />
                     <YAxis stroke="hsl(var(--muted-foreground))" />
-                    <Tooltip 
-                      contentStyle={{ 
+                    <Tooltip
+                      contentStyle={{
                         backgroundColor: 'hsl(var(--card))',
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '8px'
@@ -133,8 +173,8 @@ const OrganicSocial = () => {
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis dataKey="platform" stroke="hsl(var(--muted-foreground))" />
                     <YAxis stroke="hsl(var(--muted-foreground))" />
-                    <Tooltip 
-                      contentStyle={{ 
+                    <Tooltip
+                      contentStyle={{
                         backgroundColor: 'hsl(var(--card))',
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '8px'
@@ -147,8 +187,8 @@ const OrganicSocial = () => {
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis dataKey="platform" stroke="hsl(var(--muted-foreground))" />
                     <YAxis stroke="hsl(var(--muted-foreground))" />
-                    <Tooltip 
-                      contentStyle={{ 
+                    <Tooltip
+                      contentStyle={{
                         backgroundColor: 'hsl(var(--card))',
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '8px'
@@ -160,7 +200,9 @@ const OrganicSocial = () => {
               </ResponsiveContainer>
             </CardContent>
           </Card>
+          )}
 
+          {isVisible("follower-distribution") && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Follower Distribution</CardTitle>
@@ -217,9 +259,11 @@ const OrganicSocial = () => {
               </ResponsiveContainer>
             </CardContent>
           </Card>
+          )}
         </div>
 
         {/* Heat Map for Best Posting Times */}
+        {isVisible("posting-times") && (
         <Card>
           <CardHeader>
             <CardTitle>Best Posting Times</CardTitle>
@@ -236,6 +280,7 @@ const OrganicSocial = () => {
             />
           </CardContent>
         </Card>
+        )}
       </div>
     </DashboardLayout>
   );
