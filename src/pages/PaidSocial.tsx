@@ -109,7 +109,7 @@ const PaidSocial = () => {
                     />
                     <Legend />
                     <Line type="monotone" dataKey="conversions" stroke="hsl(var(--chart-1))" strokeWidth={2} name="Conversions" />
-                    <Line type="monotone" dataKey="roas" stroke="hsl(var(--chart-2))" strokeWidth={2} name="ROAS" />
+                    <Line type="monotone" dataKey="roas" stroke="hsl(var(--chart-3))" strokeWidth={2} name="ROAS" />
                   </LineChart>
                 ) : performanceChartType === "bar" ? (
                   <BarChart data={campaignData}>
@@ -125,7 +125,7 @@ const PaidSocial = () => {
                     />
                     <Legend />
                     <Bar dataKey="conversions" fill="hsl(var(--chart-1))" name="Conversions" />
-                    <Bar dataKey="roas" fill="hsl(var(--chart-2))" name="ROAS" />
+                    <Bar dataKey="roas" fill="hsl(var(--chart-3))" name="ROAS" />
                   </BarChart>
                 ) : (
                   <AreaChart data={campaignData}>
@@ -141,7 +141,7 @@ const PaidSocial = () => {
                     />
                     <Legend />
                     <Area type="monotone" dataKey="conversions" stroke="hsl(var(--chart-1))" fill="hsl(var(--chart-1))" fillOpacity={0.3} name="Conversions" />
-                    <Area type="monotone" dataKey="roas" stroke="hsl(var(--chart-2))" fill="hsl(var(--chart-2))" fillOpacity={0.3} name="ROAS" />
+                    <Area type="monotone" dataKey="roas" stroke="hsl(var(--chart-3))" fill="hsl(var(--chart-3))" fillOpacity={0.3} name="ROAS" />
                   </AreaChart>
                 )}
               </ResponsiveContainer>
