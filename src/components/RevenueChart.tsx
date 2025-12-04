@@ -81,8 +81,8 @@ export const RevenueChart = () => {
     return (
       <BarChart {...commonProps}>
         {commonProps.children}
-        <Bar dataKey="revenue" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-        <Bar dataKey="target" fill="hsl(var(--secondary))" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="revenue" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} name="Revenue" />
+        <Bar dataKey="target" fill="hsl(var(--chart-3))" radius={[4, 4, 0, 0]} name="Target" />
       </BarChart>
     );
   };
