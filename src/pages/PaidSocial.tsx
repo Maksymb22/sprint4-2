@@ -2,7 +2,6 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
 import { AISuggestions } from "@/components/AISuggestions";
 import { ExportData } from "@/components/ExportData";
-import { PDFExportDialog } from "@/components/PDFExportDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, Target, TrendingUp, Users } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
@@ -48,10 +47,11 @@ const PaidSocial = () => {
             <h1 className="text-3xl font-bold text-foreground">Paid Social Media</h1>
             <p className="text-muted-foreground mt-1">Track ROI, ad spend, and campaign performance</p>
           </div>
-          <div className="flex gap-2">
-            <PDFExportDialog dashboardName="Paid Social" />
-            <ExportData data={campaignData} filename="paid-social-data" />
-          </div>
+          <ExportData
+            data={campaignData}
+            filename="paid-social-data"
+            dashboardName="Paid Social"
+          />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

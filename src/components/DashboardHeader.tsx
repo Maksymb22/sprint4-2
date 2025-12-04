@@ -13,6 +13,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -68,6 +75,7 @@ export const DashboardHeader = () => {
   const navigate = useNavigate();
   const [notificationList, setNotificationList] = useState(notifications);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [selectedClient, setSelectedClient] = useState("acme-corp");
 
   const unreadCount = notificationList.filter(n => n.unread).length;
 
@@ -125,7 +133,20 @@ export const DashboardHeader = () => {
     <header className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
       <div className="flex h-16 items-center justify-between px-6">
         <div className="flex items-center gap-4">
-          <h2 className="text-lg font-semibold text-foreground">Performance Analytics Hub</h2>
+          <h2 className="text-lg font-semibold text-foreground">[Company Name]</h2>
+          <Separator orientation="vertical" className="h-6" />
+          <Select value={selectedClient} onValueChange={setSelectedClient}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Select client" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="acme-corp">Acme Corporation</SelectItem>
+              <SelectItem value="globex">Globex Industries</SelectItem>
+              <SelectItem value="initech">Initech Solutions</SelectItem>
+              <SelectItem value="umbrella">Umbrella Corp</SelectItem>
+              <SelectItem value="stark">Stark Industries</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="flex items-center gap-2">
@@ -249,10 +270,6 @@ export const DashboardHeader = () => {
                   <p className="text-xs text-muted-foreground">john.doe@example.com</p>
                 </div>
               </div>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleProfileClick}>
-                Profile Settings
-              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout} className="text-destructive">
                 Logout

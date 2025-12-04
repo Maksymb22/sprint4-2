@@ -19,42 +19,13 @@ const Settings = () => {
         </div>
 
         <Tabs defaultValue="profile" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-4 lg:w-auto">
+          <TabsList className="grid w-full grid-cols-3 lg:w-auto">
             <TabsTrigger value="profile">Profile</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
             <TabsTrigger value="appearance">Appearance</TabsTrigger>
-            <TabsTrigger value="security">Security</TabsTrigger>
           </TabsList>
 
           <TabsContent value="profile" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <User className="h-5 w-5" />
-                  <CardTitle>Profile Information</CardTitle>
-                </div>
-                <CardDescription>Update your personal information and preferences</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">First Name</Label>
-                    <Input id="firstName" placeholder="John" defaultValue="John" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input id="lastName" placeholder="Doe" defaultValue="Doe" />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="john.doe@example.com" defaultValue="john.doe@example.com" />
-                </div>
-                <Separator />
-                <Button>Save Changes</Button>
-              </CardContent>
-            </Card>
-
             <Card>
               <CardHeader>
                 <div className="flex items-center gap-2">
@@ -248,81 +219,6 @@ const Settings = () => {
                 </div>
                 <Separator />
                 <Button>Save Appearance Settings</Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="security" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Shield className="h-5 w-5" />
-                  <CardTitle>Security Settings</CardTitle>
-                </div>
-                <CardDescription>Manage your account security and authentication</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <h3 className="text-sm font-medium">Change Password</h3>
-                  <div className="space-y-2">
-                    <Label htmlFor="current-password">Current Password</Label>
-                    <Input id="current-password" type="password" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="new-password">New Password</Label>
-                    <Input id="new-password" type="password" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="confirm-password">Confirm New Password</Label>
-                    <Input id="confirm-password" type="password" />
-                  </div>
-                  <Button>Update Password</Button>
-                </div>
-                <Separator />
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label htmlFor="two-factor">Two-Factor Authentication</Label>
-                    <p className="text-sm text-muted-foreground">Add an extra layer of security to your account</p>
-                  </div>
-                  <Switch id="two-factor" />
-                </div>
-                <Separator />
-                <div className="space-y-2">
-                  <Label>Active Sessions</Label>
-                  <p className="text-sm text-muted-foreground">Manage devices where you're currently logged in</p>
-                  <Button variant="outline" className="mt-2">View Active Sessions</Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Database className="h-5 w-5" />
-                  <CardTitle>Data & Privacy</CardTitle>
-                </div>
-                <CardDescription>Control your data and privacy settings</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label htmlFor="data-collection">Analytics Data Collection</Label>
-                    <p className="text-sm text-muted-foreground">Help improve the platform by sharing usage data</p>
-                  </div>
-                  <Switch id="data-collection" defaultChecked />
-                </div>
-                <Separator />
-                <div className="space-y-2">
-                  <Label>Data Export</Label>
-                  <p className="text-sm text-muted-foreground">Download a copy of your dashboard data</p>
-                  <Button variant="outline" className="mt-2">Export Data</Button>
-                </div>
-                <Separator />
-                <div className="space-y-2">
-                  <Label>Delete Account</Label>
-                  <p className="text-sm text-muted-foreground">Permanently delete your account and all associated data</p>
-                  <Button variant="destructive" className="mt-2">Delete Account</Button>
-                </div>
               </CardContent>
             </Card>
           </TabsContent>

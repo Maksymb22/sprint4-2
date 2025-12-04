@@ -2,7 +2,6 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
 import { AISuggestions } from "@/components/AISuggestions";
 import { ExportData } from "@/components/ExportData";
-import { PDFExportDialog } from "@/components/PDFExportDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShoppingCart, DollarSign, Package, TrendingUp } from "lucide-react";
 import { AreaChart, Area, BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
@@ -48,10 +47,11 @@ const ECommerce = () => {
             <h1 className="text-3xl font-bold text-foreground">E-Commerce Performance</h1>
             <p className="text-muted-foreground mt-1">Sales metrics, product analytics, and customer journey tracking</p>
           </div>
-          <div className="flex gap-2">
-            <PDFExportDialog dashboardName="E-Commerce" />
-            <ExportData data={salesData} filename="ecommerce-data" />
-          </div>
+          <ExportData
+            data={salesData}
+            filename="ecommerce-data"
+            dashboardName="E-Commerce"
+          />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
