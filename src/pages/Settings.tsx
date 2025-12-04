@@ -188,28 +188,6 @@ const Settings = () => {
                   </Select>
                 </div>
                 <Separator />
-                <div className="space-y-2">
-                  <Label htmlFor="default-chart">Default Chart Type</Label>
-                  <Select defaultValue="line">
-                    <SelectTrigger id="default-chart">
-                      <SelectValue placeholder="Select chart type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="line">Line Chart</SelectItem>
-                      <SelectItem value="bar">Bar Chart</SelectItem>
-                      <SelectItem value="area">Area Chart</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Separator />
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label htmlFor="compact-mode">Compact Mode</Label>
-                    <p className="text-sm text-muted-foreground">Display more information in less space</p>
-                  </div>
-                  <Switch id="compact-mode" />
-                </div>
-                <Separator />
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <Label htmlFor="animations">Enable Animations</Label>
