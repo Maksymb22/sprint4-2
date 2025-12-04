@@ -51,7 +51,7 @@ export const AISuggestions = ({ suggestions, title = "AI Strategic Insights" }: 
       <CardContent>
         <div className="space-y-4">
           {suggestions.map((suggestion, index) => (
-            <div key={index} className="flex gap-3 p-3 rounded-lg bg-card border border-border hover:border-primary/40 transition-colors">
+            <div key={index} className="flex gap-3 p-3 rounded-lg bg-card border border-border transition-colors">
               <div className="flex-shrink-0 mt-0.5">
                 {getIcon(suggestion.type)}
               </div>

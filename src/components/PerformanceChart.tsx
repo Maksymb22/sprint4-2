@@ -49,7 +49,7 @@ export const PerformanceChart = () => {
               </thead>
               <tbody>
                 {data.map((item, index) => (
-                  <tr key={index} className="border-b border-border/50 hover:bg-accent/50 transition-colors">
+                  <tr key={index} className="border-b border-border/50 transition-colors">
                     <td className="py-2 px-2 font-medium">{item.name}</td>
                     <td className="text-right py-2 px-2">
                       <div className="flex items-center justify-end gap-1">

@@ -32,7 +32,7 @@ export const FunnelChart = ({ data }: FunnelChartProps) => {
                 <div className="relative h-20">
                   {/* Trapezoid shape using clip-path */}
                   <div
-                    className="h-full mx-auto relative group cursor-pointer transition-all hover:opacity-90"
+                    className="h-full mx-auto relative group transition-all"
                     style={{
                       width: `${widthPercentage}%`,
                       minWidth: "50%",
