@@ -133,7 +133,7 @@ const Index = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b border-border/50 hover:bg-accent/50 transition-colors">
+                  <tr className="border-b border-border/50 transition-colors">
                     <td className="py-3 px-4 text-sm font-medium">Revenue Growth</td>
                     <td className="py-3 px-4 text-sm">$346,820</td>
                     <td className="py-3 px-4 text-sm">$400,000</td>
@@ -145,7 +145,7 @@ const Index = () => {
                     </td>
                     <td className="py-3 px-4 text-sm text-muted-foreground">Expand marketing channels</td>
                   </tr>
-                  <tr className="border-b border-border/50 hover:bg-accent/50 transition-colors">
+                  <tr className="border-b border-border/50 transition-colors">
                     <td className="py-3 px-4 text-sm font-medium">User Acquisition</td>
                     <td className="py-3 px-4 text-sm">12,847</td>
                     <td className="py-3 px-4 text-sm">15,000</td>
@@ -157,7 +157,7 @@ const Index = () => {
                     </td>
                     <td className="py-3 px-4 text-sm text-muted-foreground">Launch referral program</td>
                   </tr>
-                  <tr className="border-b border-border/50 hover:bg-accent/50 transition-colors">
+                  <tr className="border-b border-border/50 transition-colors">
                     <td className="py-3 px-4 text-sm font-medium">Conversion Optimization</td>
                     <td className="py-3 px-4 text-sm">3.24%</td>
                     <td className="py-3 px-4 text-sm">4.50%</td>
@@ -169,7 +169,7 @@ const Index = () => {
                     </td>
                     <td className="py-3 px-4 text-sm text-muted-foreground">A/B test checkout flow</td>
                   </tr>
-                  <tr className="border-b border-border/50 hover:bg-accent/50 transition-colors">
+                  <tr className="border-b border-border/50 transition-colors">
                     <td className="py-3 px-4 text-sm font-medium">Customer Retention</td>
                     <td className="py-3 px-4 text-sm">87.5</td>
                     <td className="py-3 px-4 text-sm">90.0</td>
@@ -181,7 +181,7 @@ const Index = () => {
                     </td>
                     <td className="py-3 px-4 text-sm text-muted-foreground">Enhance onboarding experience</td>
                   </tr>
-                  <tr className="border-b border-border/50 hover:bg-accent/50 transition-colors">
+                  <tr className="border-b border-border/50 transition-colors">
                     <td className="py-3 px-4 text-sm font-medium">Marketing ROI</td>
                     <td className="py-3 px-4 text-sm">4.2x</td>
                     <td className="py-3 px-4 text-sm">5.0x</td>
@@ -193,7 +193,7 @@ const Index = () => {
                     </td>
                     <td className="py-3 px-4 text-sm text-muted-foreground">Optimize ad spend allocation</td>
                   </tr>
-                  <tr className="hover:bg-accent/50 transition-colors">
+                  <tr className="transition-colors">
                     <td className="py-3 px-4 text-sm font-medium">Brand Awareness</td>
                     <td className="py-3 px-4 text-sm">247,893</td>
                     <td className="py-3 px-4 text-sm">300,000</td>

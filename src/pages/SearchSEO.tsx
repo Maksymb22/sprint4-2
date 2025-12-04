@@ -267,7 +267,7 @@ const SearchSEO = () => {
                 <tbody>
                   {filteredKeywords.length > 0 ? (
                     filteredKeywords.map((item, index) => (
-                      <tr key={index} className="border-b border-border/50 hover:bg-accent/50 transition-colors">
+                      <tr key={index} className="border-b border-border/50 transition-colors">
                         <td className="py-3 px-4 text-sm text-foreground">{item.keyword}</td>
                         <td className="text-center py-3 px-4">
                           <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-semibold text-sm">
