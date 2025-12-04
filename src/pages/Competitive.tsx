@@ -26,7 +26,7 @@ const marketPositionData = [
 const CHART_COLORS = ["hsl(var(--chart-1))", "hsl(var(--chart-2))", "hsl(var(--chart-3))", "hsl(var(--chart-4))"];
 
 const Competitive = () => {
-  const [shareChartType, setShareChartType] = useState<"pie" | ChartType>("pie");
+  const [shareChartType, setShareChartType] = useState<"pie" | "bar">("pie");
 
   const aiSuggestions = [
     {
@@ -119,7 +119,7 @@ const Competitive = () => {
               <ChartTypeSelector
                 currentType={shareChartType}
                 onTypeChange={setShareChartType}
-                availableTypes={["pie", "bar", "line", "area"]}
+                availableTypes={["pie", "bar"]}
               />
             </CardHeader>
             <CardContent>
@@ -152,13 +152,12 @@ const Competitive = () => {
                 </ResponsiveContainer>
               ) : (
                 <ResponsiveContainer width="100%" height={300}>
-                  {shareChartType === "bar" ? (
                   <ReBarChart data={marketPositionData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis dataKey="company" stroke="hsl(var(--muted-foreground))" />
                     <YAxis stroke="hsl(var(--muted-foreground))" />
-                    <Tooltip 
-                      contentStyle={{ 
+                    <Tooltip
+                      contentStyle={{
                         backgroundColor: 'hsl(var(--card))',
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '8px'
@@ -166,35 +165,6 @@ const Competitive = () => {
                     />
                     <Bar dataKey="share" fill="hsl(var(--chart-4))" name="Market Share %" />
                   </ReBarChart>
-                ) : shareChartType === "line" ? (
-                  <LineChart data={marketPositionData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="company" stroke="hsl(var(--muted-foreground))" />
-                    <YAxis stroke="hsl(var(--muted-foreground))" />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'hsl(var(--card))',
-                        border: '1px solid hsl(var(--border))',
-                        borderRadius: '8px'
-                      }}
-                    />
-                    <Line type="monotone" dataKey="share" stroke="hsl(var(--chart-4))" strokeWidth={2} name="Market Share %" />
-                  </LineChart>
-                ) : (
-                  <AreaChart data={marketPositionData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="company" stroke="hsl(var(--muted-foreground))" />
-                    <YAxis stroke="hsl(var(--muted-foreground))" />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'hsl(var(--card))',
-                        border: '1px solid hsl(var(--border))',
-                        borderRadius: '8px'
-                      }}
-                    />
-                    <Area type="monotone" dataKey="share" stroke="hsl(var(--chart-4))" fill="hsl(var(--chart-4))" fillOpacity={0.3} name="Market Share %" />
-                  </AreaChart>
-                  )}
                 </ResponsiveContainer>
               )}
             </CardContent>

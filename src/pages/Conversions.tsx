@@ -27,7 +27,7 @@ const COLORS = [
 ];
 
 const Conversions = () => {
-  const [funnelChartType, setFunnelChartType] = useState<"funnel" | ChartType>("funnel");
+  const [funnelChartType, setFunnelChartType] = useState<"funnel" | "bar">("funnel");
 
   const aiSuggestions = [
     {
@@ -106,7 +106,7 @@ const Conversions = () => {
               >
                 Funnel View
               </Button>
-              <ChartTypeSelector currentType={funnelChartType} onTypeChange={setFunnelChartType} />
+              <ChartTypeSelector currentType={funnelChartType} onTypeChange={setFunnelChartType} availableTypes={["bar"]} />
             </div>
           </CardHeader>
           <CardContent>
@@ -114,13 +114,12 @@ const Conversions = () => {
               <FunnelChart data={funnelData} />
             ) : (
               <ResponsiveContainer width="100%" height={400}>
-                {funnelChartType === "bar" ? (
                 <BarChart data={funnelData} layout="vertical" margin={{ left: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis type="number" stroke="hsl(var(--muted-foreground))" />
                   <YAxis dataKey="stage" type="category" stroke="hsl(var(--muted-foreground))" width={100} />
-                  <Tooltip 
-                    contentStyle={{ 
+                  <Tooltip
+                    contentStyle={{
                       backgroundColor: 'hsl(var(--card))',
                       border: '1px solid hsl(var(--border))',
                       borderRadius: '8px'
@@ -138,35 +137,6 @@ const Conversions = () => {
                     ))}
                   </Bar>
                 </BarChart>
-              ) : funnelChartType === "line" ? (
-                <LineChart data={funnelData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="stage" stroke="hsl(var(--muted-foreground))" />
-                  <YAxis stroke="hsl(var(--muted-foreground))" />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '8px'
-                    }}
-                  />
-                  <Line type="monotone" dataKey="count" stroke="hsl(var(--chart-1))" strokeWidth={2} name="Count" />
-                </LineChart>
-              ) : (
-                <AreaChart data={funnelData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="stage" stroke="hsl(var(--muted-foreground))" />
-                  <YAxis stroke="hsl(var(--muted-foreground))" />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '8px'
-                    }}
-                  />
-                  <Area type="monotone" dataKey="count" stroke="hsl(var(--chart-1))" fill="hsl(var(--chart-1))" fillOpacity={0.3} name="Count" />
-                </AreaChart>
-              )}
               </ResponsiveContainer>
             )}
           </CardContent>
