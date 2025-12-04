@@ -18,11 +18,11 @@ const AVAILABLE_WIDGETS: Widget[] = [
 ];
 
 const competitorData = [
-  { metric: "Market Share", value: 28, competitor1: 35, competitor2: 22 },
-  { metric: "Brand Awareness", value: 42, competitor1: 38, competitor2: 31 },
-  { metric: "Customer Satisfaction", value: 85, competitor1: 78, competitor2: 72 },
-  { metric: "Digital Presence", value: 76, competitor1: 82, competitor2: 64 },
-  { metric: "Price Competitiveness", value: 68, competitor1: 71, competitor2: 59 },
+  { metric: "Market Share", value: 28, competitor: 35 },
+  { metric: "Brand Awareness", value: 42, competitor: 38 },
+  { metric: "Customer Satisfaction", value: 85, competitor: 78 },
+  { metric: "Digital Presence", value: 76, competitor: 82 },
+  { metric: "Price Competitiveness", value: 68, competitor: 71 },
 ];
 
 const marketPositionData = [
@@ -62,17 +62,17 @@ const Competitive = () => {
     {
       type: "opportunity" as const,
       title: "Customer Satisfaction Lead",
-      description: "Your customer satisfaction score of 85 significantly outperforms competitors (78 and 72). Leverage this in marketing and use NPS testimonials to drive acquisition.",
+      description: "Your customer satisfaction score of 85 significantly outperforms the competitor (78). Leverage this in marketing and use NPS testimonials to drive acquisition.",
     },
     {
       type: "insight" as const,
       title: "Digital Presence Gap",
-      description: "Competitor A leads in digital presence (82 vs your 76). Invest in SEO, content marketing, and social media to close this gap and capture more online traffic.",
+      description: "The competitor leads in digital presence (82 vs your 76). Invest in SEO, content marketing, and social media to close this gap and capture more online traffic.",
     },
     {
       type: "warning" as const,
       title: "Market Share Deficit",
-      description: "Trailing Competitor A by 7 percentage points (28% vs 35%). While growing at 3.2%, consider strategic partnerships or acquisition to accelerate market share gains.",
+      description: "Trailing the competitor by 7 percentage points (28% vs 35%). While growing at 3.2%, consider strategic partnerships or acquisition to accelerate market share gains.",
     },
   ];
 
@@ -160,25 +160,17 @@ const Competitive = () => {
                   <Radar
                     name="Your Company"
                     dataKey="value"
-                    stroke="hsl(var(--chart-1))"
-                    fill="hsl(var(--chart-1))"
+                    stroke="#3b82f6"
+                    fill="#3b82f6"
                     fillOpacity={0.25}
                     strokeWidth={3}
                   />
                   <Radar
-                    name="Competitor A"
-                    dataKey="competitor1"
-                    stroke="hsl(var(--chart-2))"
-                    fill="hsl(var(--chart-2))"
+                    name="Competitor"
+                    dataKey="competitor"
+                    stroke="#6b7280"
+                    fill="#6b7280"
                     fillOpacity={0.2}
-                    strokeWidth={3}
-                  />
-                  <Radar
-                    name="Competitor B"
-                    dataKey="competitor2"
-                    stroke="hsl(var(--chart-3))"
-                    fill="hsl(var(--chart-3))"
-                    fillOpacity={0.15}
                     strokeWidth={3}
                   />
                   <Tooltip
