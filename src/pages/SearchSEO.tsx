@@ -6,8 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Search, TrendingUp, Eye, Target, ArrowUp, ArrowDown, Minus } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
+import { ChartExportButton } from "@/components/ChartExportButton";
 import { useNavigate } from "react-router-dom";
 
 const keywordData = [
@@ -37,6 +38,8 @@ const SearchSEO = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [trendsChartType, setTrendsChartType] = useState<ChartType>("line");
   const [trafficChartType, setTrafficChartType] = useState<ChartType>("bar");
+  const trendsChartRef = useRef<HTMLDivElement>(null);
+  const trafficChartRef = useRef<HTMLDivElement>(null);
 
   const aiSuggestions = [
     {
@@ -127,9 +130,12 @@ const SearchSEO = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>SEO Performance Trends</CardTitle>
-              <ChartTypeSelector currentType={trendsChartType} onTypeChange={setTrendsChartType} />
+              <div className="flex gap-2">
+                <ChartExportButton chartRef={trendsChartRef} filename="seo-performance-trends" />
+                <ChartTypeSelector currentType={trendsChartType} onTypeChange={setTrendsChartType} />
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent ref={trendsChartRef}>
               <ResponsiveContainer width="100%" height={300}>
                 {trendsChartType === "line" ? (
                   <LineChart data={keywordData}>
@@ -187,9 +193,12 @@ const SearchSEO = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Monthly Traffic Growth</CardTitle>
-              <ChartTypeSelector currentType={trafficChartType} onTypeChange={setTrafficChartType} />
+              <div className="flex gap-2">
+                <ChartExportButton chartRef={trafficChartRef} filename="monthly-traffic-growth" />
+                <ChartTypeSelector currentType={trafficChartType} onTypeChange={setTrafficChartType} />
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent ref={trafficChartRef}>
               <ResponsiveContainer width="100%" height={300}>
                 {trafficChartType === "bar" ? (
                   <BarChart data={keywordData}>

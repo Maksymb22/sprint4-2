@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Award, TrendingUp, Target, BarChart3 } from "lucide-react";
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Legend, BarChart as ReBarChart, Bar, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell } from "recharts";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
-import { useState } from "react";
+import { ChartExportButton } from "@/components/ChartExportButton";
+import { useState, useRef } from "react";
 
 const competitorData = [
   { metric: "Market Share", value: 28, competitor1: 35, competitor2: 22 },
@@ -27,6 +28,8 @@ const CHART_COLORS = ["hsl(var(--chart-1))", "hsl(var(--chart-2))", "hsl(var(--c
 
 const Competitive = () => {
   const [shareChartType, setShareChartType] = useState<"pie" | "bar">("pie");
+  const comparisonChartRef = useRef<HTMLDivElement>(null);
+  const shareChartRef = useRef<HTMLDivElement>(null);
 
   const aiSuggestions = [
     {
@@ -95,10 +98,11 @@ const Competitive = () => {
 
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Competitive Comparison</CardTitle>
+              <ChartExportButton chartRef={comparisonChartRef} filename="competitive-comparison" />
             </CardHeader>
-            <CardContent>
+            <CardContent ref={comparisonChartRef}>
               <ResponsiveContainer width="100%" height={300}>
                 <RadarChart data={competitorData}>
                   <PolarGrid stroke="hsl(var(--border))" />
@@ -116,13 +120,16 @@ const Competitive = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Market Share Distribution</CardTitle>
-              <ChartTypeSelector
-                currentType={shareChartType}
-                onTypeChange={setShareChartType}
-                availableTypes={["pie", "bar"]}
-              />
+              <div className="flex gap-2">
+                <ChartExportButton chartRef={shareChartRef} filename="market-share-distribution" />
+                <ChartTypeSelector
+                  currentType={shareChartType}
+                  onTypeChange={setShareChartType}
+                  availableTypes={["pie", "bar"]}
+                />
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent ref={shareChartRef}>
               {shareChartType === "pie" ? (
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>

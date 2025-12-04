@@ -6,9 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Target, Users, TrendingUp, Zap } from "lucide-react";
 import { BarChart, Bar, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
+import { ChartExportButton } from "@/components/ChartExportButton";
 import { FunnelChart } from "@/components/FunnelChart";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 const funnelData = [
   { stage: "Visitors", count: 45800, rate: 100 },
@@ -28,6 +29,7 @@ const COLORS = [
 
 const Conversions = () => {
   const [funnelChartType, setFunnelChartType] = useState<"funnel" | "bar">("funnel");
+  const funnelChartRef = useRef<HTMLDivElement>(null);
 
   const aiSuggestions = [
     {
@@ -99,6 +101,7 @@ const Conversions = () => {
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
             <CardTitle>Conversion Funnel</CardTitle>
             <div className="flex gap-2">
+              <ChartExportButton chartRef={funnelChartRef} filename="conversion-funnel" />
               <Button
                 variant={funnelChartType === "funnel" ? "default" : "outline"}
                 size="sm"
@@ -109,7 +112,7 @@ const Conversions = () => {
               <ChartTypeSelector currentType={funnelChartType} onTypeChange={setFunnelChartType} availableTypes={["bar"]} />
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent ref={funnelChartRef}>
             {funnelChartType === "funnel" ? (
               <FunnelChart data={funnelData} />
             ) : (

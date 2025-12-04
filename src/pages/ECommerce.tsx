@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShoppingCart, DollarSign, Package, TrendingUp } from "lucide-react";
 import { AreaChart, Area, BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
-import { useState } from "react";
+import { ChartExportButton } from "@/components/ChartExportButton";
+import { useState, useRef } from "react";
 
 const salesData = [
   { month: "Jan", revenue: 45200, orders: 312, avgOrder: 145 },
@@ -20,6 +21,8 @@ const salesData = [
 const ECommerce = () => {
   const [revenueChartType, setRevenueChartType] = useState<ChartType>("area");
   const [ordersChartType, setOrdersChartType] = useState<ChartType>("bar");
+  const revenueChartRef = useRef<HTMLDivElement>(null);
+  const ordersChartRef = useRef<HTMLDivElement>(null);
 
   const aiSuggestions = [
     {
@@ -91,9 +94,12 @@ const ECommerce = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Revenue Trends</CardTitle>
-              <ChartTypeSelector currentType={revenueChartType} onTypeChange={setRevenueChartType} />
+              <div className="flex gap-2">
+                <ChartExportButton chartRef={revenueChartRef} filename="ecommerce-revenue-trends" />
+                <ChartTypeSelector currentType={revenueChartType} onTypeChange={setRevenueChartType} />
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent ref={revenueChartRef}>
               <ResponsiveContainer width="100%" height={300}>
                 {revenueChartType === "area" ? (
                   <AreaChart data={salesData}>
@@ -145,9 +151,12 @@ const ECommerce = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Order Volume</CardTitle>
-              <ChartTypeSelector currentType={ordersChartType} onTypeChange={setOrdersChartType} />
+              <div className="flex gap-2">
+                <ChartExportButton chartRef={ordersChartRef} filename="ecommerce-order-volume" />
+                <ChartTypeSelector currentType={ordersChartType} onTypeChange={setOrdersChartType} />
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent ref={ordersChartRef}>
               <ResponsiveContainer width="100%" height={300}>
                 {ordersChartType === "bar" ? (
                   <BarChart data={salesData}>
