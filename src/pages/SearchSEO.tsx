@@ -145,7 +145,7 @@ const SearchSEO = () => {
                     />
                     <Legend />
                     <Line type="monotone" dataKey="rankings" stroke="hsl(var(--chart-1))" strokeWidth={2} name="Rankings" />
-                    <Line type="monotone" dataKey="visibility" stroke="hsl(var(--chart-2))" strokeWidth={2} name="Visibility %" />
+                    <Line type="monotone" dataKey="visibility" stroke="hsl(var(--chart-3))" strokeWidth={2} name="Visibility %" />
                   </LineChart>
                 ) : trendsChartType === "bar" ? (
                   <BarChart data={keywordData}>
@@ -161,7 +161,7 @@ const SearchSEO = () => {
                     />
                     <Legend />
                     <Bar dataKey="rankings" fill="hsl(var(--chart-1))" name="Rankings" />
-                    <Bar dataKey="visibility" fill="hsl(var(--chart-2))" name="Visibility %" />
+                    <Bar dataKey="visibility" fill="hsl(var(--chart-3))" name="Visibility %" />
                   </BarChart>
                 ) : (
                   <AreaChart data={keywordData}>
@@ -177,7 +177,7 @@ const SearchSEO = () => {
                     />
                     <Legend />
                     <Area type="monotone" dataKey="rankings" stroke="hsl(var(--chart-1))" fill="hsl(var(--chart-1))" fillOpacity={0.3} name="Rankings" />
-                    <Area type="monotone" dataKey="visibility" stroke="hsl(var(--chart-2))" fill="hsl(var(--chart-2))" fillOpacity={0.3} name="Visibility %" />
+                    <Area type="monotone" dataKey="visibility" stroke="hsl(var(--chart-3))" fill="hsl(var(--chart-3))" fillOpacity={0.3} name="Visibility %" />
                   </AreaChart>
                 )}
               </ResponsiveContainer>
