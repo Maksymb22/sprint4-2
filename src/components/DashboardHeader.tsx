@@ -122,6 +122,8 @@ export const DashboardHeader = () => {
 
   const handleRefresh = () => {
     setIsRefreshing(true);
+    // Dispatch custom event to update the time display
+    window.dispatchEvent(new Event('dataRefreshed'));
     // Simulate refresh - in real app would reload data
     setTimeout(() => {
       setIsRefreshing(false);
@@ -134,7 +136,13 @@ export const DashboardHeader = () => {
       <div className="flex h-16 items-center justify-between px-6">
         <div className="flex items-center gap-4">
           <h2 className="text-lg font-semibold text-foreground">[Company Name]</h2>
-          <Separator orientation="vertical" className="h-6" />
+        </div>
+
+        <div className="flex items-center gap-2">
+          {/* Date Range Selector */}
+          <DateRangeSelector className="hidden lg:flex" />
+
+          {/* Client Selector */}
           <Select value={selectedClient} onValueChange={setSelectedClient}>
             <SelectTrigger className="w-[200px]">
               <SelectValue placeholder="Select client" />
@@ -147,11 +155,6 @@ export const DashboardHeader = () => {
               <SelectItem value="stark">Stark Industries</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {/* Date Range Selector */}
-          <DateRangeSelector className="hidden lg:flex" />
 
           {/* Manual Refresh Button */}
           <Button
