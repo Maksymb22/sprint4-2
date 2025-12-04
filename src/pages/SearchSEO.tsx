@@ -2,14 +2,23 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
 import { AISuggestions } from "@/components/AISuggestions";
 import { ExportData } from "@/components/ExportData";
+import { WidgetManager, Widget } from "@/components/WidgetManager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Search, TrendingUp, Eye, Target, ArrowUp, ArrowDown, Minus } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ChartTypeSelector, ChartType } from "@/components/ChartTypeSelector";
 import { ChartExportButton } from "@/components/ChartExportButton";
 import { useNavigate } from "react-router-dom";
+
+const AVAILABLE_WIDGETS: Widget[] = [
+  { id: "key-metrics", label: "Key Metrics", description: "Rankings, traffic, visibility, and CTR" },
+  { id: "ai-insights", label: "AI SEO Insights", description: "AI-generated SEO recommendations" },
+  { id: "seo-trends", label: "SEO Performance Trends", description: "Rankings and visibility over time" },
+  { id: "traffic-growth", label: "Monthly Traffic Growth", description: "Organic traffic trends" },
+  { id: "keyword-rankings", label: "Keyword Rankings", description: "Detailed keyword position tracking" },
+];
 
 const keywordData = [
   { month: "Jan", rankings: 45, traffic: 1200, visibility: 65 },
@@ -40,6 +49,25 @@ const SearchSEO = () => {
   const [trafficChartType, setTrafficChartType] = useState<ChartType>("bar");
   const trendsChartRef = useRef<HTMLDivElement>(null);
   const trafficChartRef = useRef<HTMLDivElement>(null);
+
+  const [visibleWidgets, setVisibleWidgets] = useState<string[]>(() => {
+    const saved = localStorage.getItem("search-seo-widgets");
+    return saved ? JSON.parse(saved) : AVAILABLE_WIDGETS.map(w => w.id);
+  });
+
+  useEffect(() => {
+    localStorage.setItem("search-seo-widgets", JSON.stringify(visibleWidgets));
+  }, [visibleWidgets]);
+
+  const handleToggleWidget = (widgetId: string) => {
+    setVisibleWidgets(prev =>
+      prev.includes(widgetId)
+        ? prev.filter(id => id !== widgetId)
+        : [...prev, widgetId]
+    );
+  };
+
+  const isVisible = (widgetId: string) => visibleWidgets.includes(widgetId);
 
   const aiSuggestions = [
     {
@@ -77,13 +105,21 @@ const SearchSEO = () => {
             <h1 className="text-3xl font-bold text-foreground">Search & SEO Performance</h1>
             <p className="text-muted-foreground mt-1">Track keyword rankings, visibility metrics, and organic traffic</p>
           </div>
-          <ExportData
-            data={keywordData}
-            filename="search-seo-data"
-            dashboardName="Search & SEO"
-          />
+          <div className="flex gap-2">
+            <WidgetManager
+              widgets={AVAILABLE_WIDGETS}
+              visibleWidgets={visibleWidgets}
+              onToggleWidget={handleToggleWidget}
+            />
+            <ExportData
+              data={keywordData}
+              filename="search-seo-data"
+              dashboardName="Search & SEO"
+            />
+          </div>
         </div>
 
+        {isVisible("key-metrics") && (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <div className="cursor-pointer" onClick={() => navigate('/search-seo/keyword-rankings-history')}>
             <MetricCard
@@ -122,11 +158,16 @@ const SearchSEO = () => {
             />
           </div>
         </div>
+        )}
 
         {/* AI Strategic Insights */}
-        <AISuggestions suggestions={aiSuggestions} title="AI SEO Insights" />
+        {isVisible("ai-insights") && (
+          <AISuggestions suggestions={aiSuggestions} title="AI SEO Insights" />
+        )}
 
+        {(isVisible("seo-trends") || isVisible("traffic-growth")) && (
         <div className="grid gap-4 md:grid-cols-2">
+          {isVisible("seo-trends") && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>SEO Performance Trends</CardTitle>
@@ -189,7 +230,9 @@ const SearchSEO = () => {
               </ResponsiveContainer>
             </CardContent>
           </Card>
+          )}
 
+          {isVisible("traffic-growth") && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Monthly Traffic Growth</CardTitle>
@@ -246,8 +289,11 @@ const SearchSEO = () => {
               </ResponsiveContainer>
             </CardContent>
           </Card>
+          )}
         </div>
+        )}
 
+        {isVisible("keyword-rankings") && (
         <Card>
           <CardHeader>
             <CardTitle>Keyword Rankings</CardTitle>
@@ -314,6 +360,7 @@ const SearchSEO = () => {
             </div>
           </CardContent>
         </Card>
+        )}
       </div>
     </DashboardLayout>
   );

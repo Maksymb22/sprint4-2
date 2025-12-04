@@ -4,10 +4,39 @@ import { RevenueChart } from "@/components/RevenueChart";
 import { PerformanceChart } from "@/components/PerformanceChart";
 import { AISuggestions } from "@/components/AISuggestions";
 import { ExportData } from "@/components/ExportData";
+import { WidgetManager, Widget } from "@/components/WidgetManager";
 import { DollarSign, Users, TrendingUp, Activity } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+
+const AVAILABLE_WIDGETS: Widget[] = [
+  { id: "key-metrics", label: "Key Metrics", description: "Revenue, users, conversion rate, and engagement" },
+  { id: "revenue-chart", label: "Revenue Trends", description: "Visual representation of revenue over time" },
+  { id: "performance-chart", label: "Platform Performance", description: "Performance comparison across platforms" },
+  { id: "additional-metrics", label: "Additional Metrics", description: "Traffic, ad spend, and ROI" },
+  { id: "ai-insights", label: "AI Strategic Insights", description: "AI-generated recommendations and opportunities" },
+  { id: "strategic-overview", label: "Strategic Overview", description: "Detailed performance table with action items" },
+];
 
 const Index = () => {
+  const [visibleWidgets, setVisibleWidgets] = useState<string[]>(() => {
+    const saved = localStorage.getItem("executive-dashboard-widgets");
+    return saved ? JSON.parse(saved) : AVAILABLE_WIDGETS.map(w => w.id);
+  });
+
+  useEffect(() => {
+    localStorage.setItem("executive-dashboard-widgets", JSON.stringify(visibleWidgets));
+  }, [visibleWidgets]);
+
+  const handleToggleWidget = (widgetId: string) => {
+    setVisibleWidgets(prev =>
+      prev.includes(widgetId)
+        ? prev.filter(id => id !== widgetId)
+        : [...prev, widgetId]
+    );
+  };
+
+  const isVisible = (widgetId: string) => visibleWidgets.includes(widgetId);
   const aiSuggestions = [
     {
       type: "opportunity" as const,
@@ -44,14 +73,22 @@ const Index = () => {
               Comprehensive overview of your business performance and key metrics
             </p>
           </div>
-          <ExportData
-            data={executiveData}
-            filename="executive-dashboard-data"
-            dashboardName="Executive Dashboard"
-          />
+          <div className="flex gap-2">
+            <WidgetManager
+              widgets={AVAILABLE_WIDGETS}
+              visibleWidgets={visibleWidgets}
+              onToggleWidget={handleToggleWidget}
+            />
+            <ExportData
+              data={executiveData}
+              filename="executive-dashboard-data"
+              dashboardName="Executive Dashboard"
+            />
+          </div>
         </div>
 
         {/* Key Metrics Grid */}
+        {isVisible("key-metrics") && (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             title="Total Revenue"
@@ -82,14 +119,18 @@ const Index = () => {
             subtitle="Out of 100"
           />
         </div>
+        )}
 
         {/* Charts Grid */}
+        {(isVisible("revenue-chart") || isVisible("performance-chart")) && (
         <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
-          <RevenueChart />
-          <PerformanceChart />
+          {isVisible("revenue-chart") && <RevenueChart />}
+          {isVisible("performance-chart") && <PerformanceChart />}
         </div>
+        )}
 
         {/* Additional Metrics */}
+        {isVisible("additional-metrics") && (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <MetricCard
             title="Website Traffic"
@@ -110,11 +151,15 @@ const Index = () => {
             subtitle="Return on investment"
           />
         </div>
+        )}
 
         {/* AI Strategic Insights */}
-        <AISuggestions suggestions={aiSuggestions} />
+        {isVisible("ai-insights") && (
+          <AISuggestions suggestions={aiSuggestions} />
+        )}
 
         {/* Strategic Overview Table */}
+        {isVisible("strategic-overview") && (
         <Card>
           <CardHeader>
             <CardTitle>Strategic Performance Overview</CardTitle>
@@ -210,6 +255,7 @@ const Index = () => {
             </div>
           </CardContent>
         </Card>
+        )}
       </div>
     </DashboardLayout>
   );
