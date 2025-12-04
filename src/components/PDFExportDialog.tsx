@@ -55,14 +55,6 @@ export const PDFExportDialog = ({ trigger, dashboardName = "Dashboard", open: co
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger || (
-          <Button variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-2" />
-            Export PDF
-          </Button>
-        )}
-      </DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Export to PDF</DialogTitle>
