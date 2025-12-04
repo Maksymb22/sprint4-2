@@ -104,14 +104,10 @@ export const ExportData = ({ data, filename, className, dashboardName }: ExportD
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
-          <DropdownMenuLabel>Export Options</DropdownMenuLabel>
-          <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setPdfDialogOpen(true)}>
             <FileType className="h-4 w-4 mr-2" />
             Export as PDF
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuLabel className="text-xs text-muted-foreground">Data Formats</DropdownMenuLabel>
           <DropdownMenuItem onClick={exportToCSV}>
             <FileSpreadsheet className="h-4 w-4 mr-2" />
             Export as CSV
