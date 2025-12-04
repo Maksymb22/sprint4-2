@@ -4,7 +4,6 @@ import { RevenueChart } from "@/components/RevenueChart";
 import { PerformanceChart } from "@/components/PerformanceChart";
 import { AISuggestions } from "@/components/AISuggestions";
 import { ExportData } from "@/components/ExportData";
-import { PDFExportDialog } from "@/components/PDFExportDialog";
 import { DollarSign, Users, TrendingUp, Activity } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -45,10 +44,11 @@ const Index = () => {
               Comprehensive overview of your business performance and key metrics
             </p>
           </div>
-          <div className="flex gap-2">
-            <PDFExportDialog dashboardName="Executive Dashboard" />
-            <ExportData data={executiveData} filename="executive-dashboard-data" />
-          </div>
+          <ExportData
+            data={executiveData}
+            filename="executive-dashboard-data"
+            dashboardName="Executive Dashboard"
+          />
         </div>
 
         {/* Key Metrics Grid */}

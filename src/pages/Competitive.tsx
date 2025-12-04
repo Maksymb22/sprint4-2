@@ -2,7 +2,6 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
 import { AISuggestions } from "@/components/AISuggestions";
 import { ExportData } from "@/components/ExportData";
-import { PDFExportDialog } from "@/components/PDFExportDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Award, TrendingUp, Target, BarChart3 } from "lucide-react";
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Legend, BarChart as ReBarChart, Bar, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell } from "recharts";
@@ -55,10 +54,11 @@ const Competitive = () => {
             <h1 className="text-3xl font-bold text-foreground">Competitive Intelligence</h1>
             <p className="text-muted-foreground mt-1">Market positioning, competitor tracking, and industry benchmarking</p>
           </div>
-          <div className="flex gap-2">
-            <PDFExportDialog dashboardName="Competitive Intelligence" />
-            <ExportData data={competitorData} filename="competitive-data" />
-          </div>
+          <ExportData
+            data={competitorData}
+            filename="competitive-data"
+            dashboardName="Competitive Intelligence"
+          />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

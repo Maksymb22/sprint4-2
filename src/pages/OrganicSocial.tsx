@@ -2,7 +2,6 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { MetricCard } from "@/components/MetricCard";
 import { AISuggestions } from "@/components/AISuggestions";
 import { ExportData } from "@/components/ExportData";
-import { PDFExportDialog } from "@/components/PDFExportDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Facebook, Instagram, Linkedin, Heart, MessageCircle, Share2, TrendingUp } from "lucide-react";
 import { BarChart, Bar, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
@@ -62,10 +61,11 @@ const OrganicSocial = () => {
             <h1 className="text-3xl font-bold text-foreground">Organic Social Media</h1>
             <p className="text-muted-foreground mt-1">Monitor engagement and growth across all social platforms</p>
           </div>
-          <div className="flex gap-2">
-            <PDFExportDialog dashboardName="Organic Social" />
-            <ExportData data={platformData} filename="organic-social-data" />
-          </div>
+          <ExportData
+            data={platformData}
+            filename="organic-social-data"
+            dashboardName="Organic Social"
+          />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

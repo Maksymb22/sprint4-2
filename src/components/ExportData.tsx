@@ -7,15 +7,20 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Download, FileSpreadsheet, FileJson, FileText } from "lucide-react";
+import { Download, FileSpreadsheet, FileJson, FileText, FileType } from "lucide-react";
+import { PDFExportDialog } from "./PDFExportDialog";
+import { useState } from "react";
 
 interface ExportDataProps {
   data: any[];
   filename: string;
   className?: string;
+  dashboardName?: string;
 }
 
-export const ExportData = ({ data, filename, className }: ExportDataProps) => {
+export const ExportData = ({ data, filename, className, dashboardName }: ExportDataProps) => {
+  const [pdfDialogOpen, setPdfDialogOpen] = useState(false);
+
   const exportToCSV = () => {
     if (!data || data.length === 0) return;
 
@@ -85,33 +90,46 @@ export const ExportData = ({ data, filename, className }: ExportDataProps) => {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className={className}>
-          <Download className="h-4 w-4 mr-2" />
-          Export Data
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuLabel>Choose Format</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={exportToCSV}>
-          <FileSpreadsheet className="h-4 w-4 mr-2" />
-          Export as CSV
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={exportToExcel}>
-          <FileSpreadsheet className="h-4 w-4 mr-2" />
-          Export as Excel
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={exportToJSON}>
-          <FileJson className="h-4 w-4 mr-2" />
-          Export as JSON
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={exportToTXT}>
-          <FileText className="h-4 w-4 mr-2" />
-          Export as TXT
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <PDFExportDialog
+        dashboardName={dashboardName}
+        open={pdfDialogOpen}
+        onOpenChange={setPdfDialogOpen}
+      />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="sm" className={className}>
+            <Download className="h-4 w-4 mr-2" />
+            Export
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuLabel>Export Options</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => setPdfDialogOpen(true)}>
+            <FileType className="h-4 w-4 mr-2" />
+            Export as PDF
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel className="text-xs text-muted-foreground">Data Formats</DropdownMenuLabel>
+          <DropdownMenuItem onClick={exportToCSV}>
+            <FileSpreadsheet className="h-4 w-4 mr-2" />
+            Export as CSV
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={exportToExcel}>
+            <FileSpreadsheet className="h-4 w-4 mr-2" />
+            Export as Excel
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={exportToJSON}>
+            <FileJson className="h-4 w-4 mr-2" />
+            Export as JSON
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={exportToTXT}>
+            <FileText className="h-4 w-4 mr-2" />
+            Export as TXT
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   );
 };
